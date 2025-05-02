@@ -1,0 +1,177 @@
+// schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+  output = "client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum PaymentMethodType {
+  LIGHTNING
+  MERCADOPAGO
+}
+
+enum EventStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum EventRole {
+  OWNER
+  COLLABORATOR
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+}
+
+model User {
+  id             Int             @id @default(autoincrement())
+  email          String?         @unique
+  nostrPubKey    String?         @unique
+  paymentMethods PaymentMethod[]
+  eventMembers   EventMember[]
+  orders         Order[]
+  tickets        Ticket[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+}
+
+model PaymentMethod {
+  id               Int               @id @default(autoincrement())
+  type             PaymentMethodType
+  lightningAddress String?
+  mpAccessToken    String?
+  mpRefreshToken   String?
+  mpTokenExpiresAt DateTime?
+  mpAccountId      String?
+  user             User              @relation(fields: [userId], references: [id])
+  userId           Int
+  events           Event[]           @relation("EventPaymentMethods")
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  Order            Order[]
+
+  @@unique([userId, type])
+}
+
+model Event {
+  id             Int             @id @default(autoincrement())
+  title          String
+  description    String?
+  status         EventStatus     @default(DRAFT)
+  ticketTypes    TicketType[]
+  team           EventMember[]
+  paymentMethods PaymentMethod[] @relation("EventPaymentMethods")
+  discountCodes  DiscountCode[]
+  orders         Order[]
+  tickets        Ticket[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+}
+
+model EventMember {
+  event     Event     @relation(fields: [eventId], references: [id])
+  eventId   Int
+  user      User      @relation(fields: [userId], references: [id])
+  userId    Int
+  role      EventRole
+  createdAt DateTime  @default(now())
+
+  @@id([eventId, userId])
+}
+
+model TicketType {
+  id         Int         @id @default(autoincrement())
+  event      Event       @relation(fields: [eventId], references: [id])
+  eventId    Int
+  name       String
+  price      Float
+  quantity   Int
+  orderItems OrderItem[]
+  tickets    Ticket[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  @@unique([eventId, name])
+}
+
+model DiscountCode {
+  id         Int       @id @default(autoincrement())
+  event      Event     @relation(fields: [eventId], references: [id])
+  eventId    Int
+  code       String
+  percentage Int
+  expiresAt  DateTime?
+  maxUses    Int?
+  orders     Order[]
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@unique([eventId, code])
+}
+
+model Order {
+  id              Int            @id @default(autoincrement())
+  event           Event          @relation(fields: [eventId], references: [id])
+  eventId         Int
+  buyer           User           @relation(fields: [buyerId], references: [id])
+  buyerId         Int
+  status          OrderStatus    @default(PENDING)
+  paymentMethod   PaymentMethod? @relation(fields: [paymentMethodId], references: [id])
+  paymentMethodId Int?
+  discountCode    DiscountCode?  @relation(fields: [discountCodeId], references: [id])
+  discountCodeId  Int?
+  totalAmount     Float
+  items           OrderItem[]
+  tickets         Ticket[]
+  createdAt       DateTime       @default(now())
+  paidAt          DateTime?
+  updatedAt       DateTime       @updatedAt
+}
+
+model OrderItem {
+  order        Order      @relation(fields: [orderId], references: [id])
+  orderId      Int
+  ticketType   TicketType @relation(fields: [ticketTypeId], references: [id])
+  ticketTypeId Int
+  quantity     Int
+  price        Float
+  tickets      Ticket[]
+
+  @@id([orderId, ticketTypeId])
+}
+
+model Ticket {
+  id                    Int        @id @default(autoincrement())
+  event                 Event      @relation(fields: [eventId], references: [id])
+  eventId               Int
+  ticketType            TicketType @relation(fields: [ticketTypeId], references: [id])
+  ticketTypeId          Int
+  order                 Order      @relation(fields: [orderId], references: [id])
+  orderId               Int
+  owner                 User       @relation(fields: [ownerId], references: [id])
+  ownerId               Int
+  isCheckedIn           Boolean    @default(false)
+  createdAt             DateTime   @default(now())
+  updatedAt             DateTime   @updatedAt
+  OrderItem             OrderItem? @relation(fields: [orderItemOrderId, orderItemTicketTypeId], references: [orderId, ticketTypeId])
+  orderItemOrderId      Int?
+  orderItemTicketTypeId Int?
+}
+
+model LoginCode {
+  id        Int      @id @default(autoincrement())
+  email     String
+  code      String
+  used      Boolean  @default(false)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([email, code])
+}

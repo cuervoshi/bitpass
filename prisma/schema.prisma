@@ -166,12 +166,13 @@ model Ticket {
 }
 
 model LoginCode {
-  id        Int      @id @default(autoincrement())
-  email     String
-  code      String
-  used      Boolean  @default(false)
-  expiresAt DateTime
-  createdAt DateTime @default(now())
+  id         Int      @id @default(autoincrement())
+  email      String
+  code       String
+  used       Boolean  @default(false)
+  attempts   Int      @default(0)
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
 
   @@index([email, code])
 }

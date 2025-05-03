@@ -27,7 +27,7 @@ export async function handleRequestOtp(req: Request, res: Response) {
       : Math.floor(100000 + Math.random() * 900000).toString();
 
     if (!existing) {
-      const expiresAt = new Date(Date.now() + 1000 * 60 * 10); // 10 minutes
+      const expiresAt = new Date(Date.now() + 1000 * 60 * 10);
       await prisma.loginCode.create({
         data: { email, code, expiresAt },
       });

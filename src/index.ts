@@ -1,5 +1,5 @@
-import createApp from './app.js';
-import { config } from './config/env.js';
+import createApp from "./app.js";
+import { config } from "./lib/env.js";
 
 const startServer = async (): Promise<void> => {
   try {
@@ -12,7 +12,7 @@ const startServer = async (): Promise<void> => {
       console.log(`⏱️ Server time: ${new Date().toISOString()}`);
     });
   } catch (error) {
-    console.error('Failed to start server:', error);
+    console.error("Failed to start server:", error);
     process.exit(1);
   }
 };

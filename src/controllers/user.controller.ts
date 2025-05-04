@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
-import { getPrisma } from '@/services/prisma.service.js';
+import { Request, Response } from "express";
+import { getPrisma } from "../services/prisma.service.js";
 
 const prisma = getPrisma();
 
@@ -17,7 +17,7 @@ export async function handleGetProfile(req: Request, res: Response) {
   });
 
   if (!user) {
-    res.status(404).json({ error: 'User not found' });
+    res.status(404).json({ error: "User not found" });
     return;
   }
 

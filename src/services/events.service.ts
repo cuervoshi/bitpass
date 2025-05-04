@@ -1,12 +1,9 @@
-import type { CreateEventInput } from '@/utils/validators/event.schema.js';
-import { getPrisma } from './prisma.service.js';
+import type { CreateEventInput } from "../lib/validators/event.schema.js";
+import { getPrisma } from "./prisma.service.js";
 
 const prisma = getPrisma();
 
-export async function createDraftEvent(
-  data: CreateEventInput,
-  userId: string
-) {
+export async function createDraftEvent(data: CreateEventInput, userId: string) {
   const startsAt = new Date(`${data.startDate}T${data.startTime}:00`);
   const endsAt = new Date(`${data.endDate}T${data.endTime}:00`);
 
@@ -17,7 +14,7 @@ export async function createDraftEvent(
       location: data.location,
       startsAt,
       endsAt,
-      status: 'DRAFT',
+      status: "DRAFT",
       creatorId: userId,
     },
   });

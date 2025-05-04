@@ -10,11 +10,7 @@
     "declaration": true,
     "rootDir": "src",
     "skipLibCheck": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"],
-      "~/prisma/*": ["prisma/*"]
-    }
+    "baseUrl": "."
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

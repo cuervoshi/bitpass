@@ -1,16 +1,11 @@
-import express, { Router } from 'express';
-import { requireAuth } from '@/middleware/require-auth.js';
-import { CreateEventSchema } from '@/utils/validators/event.schema.js';
-import { createEvent } from '@/controllers/events.controller.js';
-import { validate } from '@/middleware/validate.js';
+import express, { Router } from "express";
+import { requireAuth } from "../lib/middlewares/require-auth.middleware.js";
+import { CreateEventSchema } from "../lib/validators/event.schema.js";
+import { createEvent } from "../controllers/events.controller.js";
+import { validate } from "../lib/middlewares/validate.middleware.js";
 
 const router: Router = express.Router();
 
-router.post(
-    '/',
-    requireAuth,
-    validate(CreateEventSchema),
-    createEvent
-  );
+router.post("/", requireAuth, validate(CreateEventSchema), createEvent);
 
 export default router;

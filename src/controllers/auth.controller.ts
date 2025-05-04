@@ -1,11 +1,11 @@
-import type { Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
+import type { Request, Response } from "express";
+import jwt from "jsonwebtoken";
 import {
   verifyEvent,
   getEventHash,
   type Event as NostrEvent,
-} from 'nostr-tools';
-import { getPrisma } from '@/services/prisma.service.js';
+} from "nostr-tools";
+import { getPrisma } from "../services/prisma.service.js";
 
 const prisma = getPrisma();
 
@@ -15,12 +15,12 @@ const prisma = getPrisma();
  */
 export async function handleRequestOtp(
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> {
   try {
     const { email } = req.body;
-    if (typeof email !== 'string' || !email.includes('@')) {
-      res.status(400).json({ error: 'Invalid email' });
+    if (typeof email !== "string" || !email.includes("@")) {
+      res.status(400).json({ error: "Invalid email" });
       return;
     }
 
@@ -34,8 +34,7 @@ export async function handleRequestOtp(
     });
 
     const code =
-      existing?.code ??
-      Math.floor(100000 + Math.random() * 900000).toString();
+      existing?.code ?? Math.floor(100000 + Math.random() * 900000).toString();
 
     if (!existing) {
       const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
@@ -48,8 +47,8 @@ export async function handleRequestOtp(
     // TODO: send code via email
     res.status(200).json({ success: true });
   } catch (err) {
-    console.error('[handleRequestOtp] Error:', err);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("[handleRequestOtp] Error:", err);
+    res.status(500).json({ error: "Internal server error" });
   }
 }
 
@@ -59,12 +58,12 @@ export async function handleRequestOtp(
  */
 export async function handleVerifyOtp(
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> {
   try {
     const { email, code } = req.body;
-    if (typeof email !== 'string' || typeof code !== 'string') {
-      res.status(400).json({ error: 'Invalid parameters' });
+    if (typeof email !== "string" || typeof code !== "string") {
+      res.status(400).json({ error: "Invalid parameters" });
       return;
     }
 
@@ -77,7 +76,7 @@ export async function handleVerifyOtp(
     });
 
     if (!loginCode) {
-      res.status(401).json({ error: 'Invalid or expired code' });
+      res.status(401).json({ error: "Invalid or expired code" });
       return;
     }
 
@@ -86,7 +85,7 @@ export async function handleVerifyOtp(
         where: { id: loginCode.id },
         data: { used: true },
       });
-      res.status(403).json({ error: 'Too many attempts; code blocked' });
+      res.status(403).json({ error: "Too many attempts; code blocked" });
       return;
     }
 
@@ -95,7 +94,7 @@ export async function handleVerifyOtp(
         where: { id: loginCode.id },
         data: { attempts: { increment: 1 } },
       });
-      res.status(401).json({ error: 'Incorrect code' });
+      res.status(401).json({ error: "Incorrect code" });
       return;
     }
 
@@ -112,16 +111,14 @@ export async function handleVerifyOtp(
     });
 
     // Issue JWT
-    const token = jwt.sign(
-      { userId: user.id },
-      process.env.JWT_SECRET!,
-      { expiresIn: '7d' }
-    );
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET!, {
+      expiresIn: "7d",
+    });
 
     res.status(200).json({ success: true, token, user });
   } catch (err) {
-    console.error('[handleVerifyOtp] Error:', err);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("[handleVerifyOtp] Error:", err);
+    res.status(500).json({ error: "Internal server error" });
   }
 }
 
@@ -131,21 +128,21 @@ export async function handleVerifyOtp(
  */
 export async function handleVerifyNostr(
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> {
   try {
     const event = req.body as NostrEvent;
 
     if (
       !event ||
-      typeof event !== 'object' ||
+      typeof event !== "object" ||
       event.kind !== 27235 ||
       !event.pubkey ||
       !event.sig ||
       !event.created_at ||
       !Array.isArray(event.tags)
     ) {
-      res.status(400).json({ error: 'Invalid NIP-98 event' });
+      res.status(400).json({ error: "Invalid NIP-98 event" });
       return;
     }
 
@@ -155,7 +152,7 @@ export async function handleVerifyNostr(
     // Verify signature
     const valid = verifyEvent(event);
     if (!valid) {
-      res.status(401).json({ error: 'Invalid signature' });
+      res.status(401).json({ error: "Invalid signature" });
       return;
     }
 
@@ -167,15 +164,13 @@ export async function handleVerifyNostr(
     });
 
     // Issue JWT
-    const token = jwt.sign(
-      { userId: user.id },
-      process.env.JWT_SECRET!,
-      { expiresIn: '7d' }
-    );
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET!, {
+      expiresIn: "7d",
+    });
 
     res.status(200).json({ success: true, token, user });
   } catch (err) {
-    console.error('[handleVerifyNostr] Error:', err);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("[handleVerifyNostr] Error:", err);
+    res.status(500).json({ error: "Internal server error" });
   }
 }

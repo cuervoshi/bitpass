@@ -1,10 +1,11 @@
 import express, { Application } from 'express';
 import { logger } from './middleware/logger.js';
-import { errorHandler } from './middleware/errorHandler.js';
+import { errorHandler } from './middleware/error-handler.js';
 
-import healthRouter from './routes/health.js';
-import authRouter from './routes/auth.js';
-import usersRouter from './routes/user.js';
+import healthRouter from './routes/health.routes.js';
+import authRouter from './routes/auth.routes.js';
+import usersRouter from './routes/user.routes.js';
+import eventsRouter from './routes/events.routes.js';
 
 const createApp = (): Application => {
   const app: Application = express();
@@ -17,6 +18,7 @@ const createApp = (): Application => {
   app.use('/health', healthRouter);
   app.use('/auth', authRouter);
   app.use('/users', usersRouter);
+  app.use('/events', eventsRouter);
 
   // 404 handler for undefined routes
   app.use((req, res) => {

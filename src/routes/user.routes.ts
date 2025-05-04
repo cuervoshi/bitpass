@@ -1,7 +1,6 @@
 import express, { Router } from 'express';
-
-import { handleGetProfile } from '../controllers/user/getUser.js';
-import { requireAuth } from '../middleware/requireAuth.js';
+import { requireAuth } from '@/middleware/require-auth.js';
+import { handleGetProfile } from '@/controllers/user.controller.js';
 
 const router: Router = express.Router();
 

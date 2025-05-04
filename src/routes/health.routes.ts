@@ -1,6 +1,6 @@
 
-import { HealthResponse } from '../types/index.js';
-import { getVersion } from '../utils/appInfo.js';
+import { HealthResponse } from '@/types/index.js';
+import { getVersion } from '@/utils/appInfo.js';
 import { Request, Response, Router, type Router as ExpressRouter } from 'express';
 
 const router: ExpressRouter = Router();

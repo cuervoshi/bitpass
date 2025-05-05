@@ -1,4 +1,5 @@
 import express, { Router } from "express";
+import { z } from "zod";
 import { requireAuth } from "../lib/middlewares/require-auth.middleware.js";
 import { validate } from "../lib/middlewares/validate.middleware.js";
 import {
@@ -10,17 +11,27 @@ import {
   handleCreateDiscount,
   handleUpdateDiscount,
   handleDeleteDiscount,
+  handleValidateDiscount,
 } from "../controllers/discount.controller.js";
 
 const router: Router = express.Router({ mergeParams: true });
 
 router.get("/", requireAuth, handleListDiscounts);
+
 router.post(
   "/",
   requireAuth,
   validate(CreateDiscountSchema),
   handleCreateDiscount,
 );
+
+router.post(
+  "/verify",
+  requireAuth,
+  validate(z.object({ code: z.string().min(1) })),
+  handleValidateDiscount,
+);
+
 router.patch(
   "/:codeId",
   requireAuth,

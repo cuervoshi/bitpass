@@ -85,3 +85,20 @@ export async function handleDeleteDiscount(
     return;
   }
 }
+
+export async function handleValidateDiscount(
+  req: Request<{ id: string }, {}, { code: string }>,
+  res: Response,
+): Promise<void> {
+  try {
+    const { id: eventId } = req.params;
+    const { code } = req.body;
+    const result = await dcService.validateDiscountCode(eventId, code);
+
+    res.status(200).json({ valid: true });
+  } catch (err: any) {
+    res
+      .status(err.status ?? 500)
+      .json({ error: err.message ?? "Internal server error" });
+  }
+}

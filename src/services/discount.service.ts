@@ -102,3 +102,35 @@ export async function deleteDiscountCode(
   }
   await prisma.discountCode.delete({ where: { id: codeId } });
 }
+
+/**
+ * Validate that a discount code is usable for a given event.
+ * @throws { status:404|400|403 } if the code is not found or invalid.
+ */
+export async function validateDiscountCode(eventId: string, code: string) {
+  // 1) Find the code and include its event + existing uses
+  const dc = await prisma.discountCode.findFirst({
+    where: { eventId, code },
+    include: {
+      event: true,
+      orders: true,
+    },
+  });
+  if (!dc) {
+    throw { status: 404, message: "Discount code not found" };
+  }
+
+  if (dc.event.status !== "PUBLISHED") {
+    throw { status: 403, message: "Event not published" };
+  }
+
+  if (dc.expiresAt && dc.expiresAt < new Date()) {
+    throw { status: 400, message: "Discount code expired" };
+  }
+
+  if (dc.maxUses != null && dc.orders.length >= dc.maxUses) {
+    throw { status: 400, message: "Discount code usage limit reached" };
+  }
+
+  return { valid: true, code: dc.code, percentage: dc.percentage };
+}

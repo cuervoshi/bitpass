@@ -45,19 +45,27 @@ model User {
 }
 
 model PaymentMethod {
-  id String @id @default(uuid())
-  type             PaymentMethodType
-  lightningAddress String?
-  mpAccessToken    String?
-  mpRefreshToken   String?
-  mpTokenExpiresAt DateTime?
-  mpAccountId      String?
-  user             User              @relation(fields: [userId], references: [id])
-  userId String
-  events           Event[]           @relation("EventPaymentMethods")
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt
-  Order            Order[]
+  id                       String    @id @default(uuid())
+  type                     PaymentMethodType
+
+  lightningAddress         String?
+  lnurlCallback            String?
+  proxyPubkey              String?
+  proxyPrivkeyEncrypted    String?
+
+  mpAccessToken            String?
+  mpRefreshToken           String?
+  mpTokenExpiresAt         DateTime?
+  mpAccountId              String?
+
+  user                     User      @relation(fields: [userId], references: [id])
+  userId                   String
+
+  events                   Event[]   @relation("EventPaymentMethods")
+  orders                   Order[]
+
+  createdAt                DateTime  @default(now())
+  updatedAt                DateTime  @updatedAt
 
   @@unique([userId, type])
 }

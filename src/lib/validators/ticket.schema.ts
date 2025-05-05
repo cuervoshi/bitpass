@@ -13,3 +13,14 @@ export const CreateTicketSchema = z.object({
 });
 
 export type CreateTicketInput = z.infer<typeof CreateTicketSchema>;
+
+/**
+ * Schema to update one or more fields of a ticket type.
+ * At least one key must be present.
+ */
+export const UpdateTicketSchema = CreateTicketSchema.partial().refine(
+  (data) => Object.keys(data).length > 0,
+  { message: "At least one field must be provided" },
+);
+
+export type UpdateTicketInput = z.infer<typeof UpdateTicketSchema>;

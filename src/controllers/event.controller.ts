@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import * as eventService from "../services/events.service.js";
+import * as eventService from "../services/event.service.js";
 
 export async function createEvent(req: Request, res: Response) {
   try {

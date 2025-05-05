@@ -96,12 +96,19 @@ model EventMember {
   @@id([eventId, userId])
 }
 
+enum Currency {
+  USD
+  SAT
+  ARS
+}
+
 model TicketType {
   id String @id @default(uuid())
   event      Event       @relation(fields: [eventId], references: [id])
   eventId String
   name       String
   price      Float
+  currency   Currency    @default(USD)
   quantity   Int
   orderItems OrderItem[]
   tickets    Ticket[]

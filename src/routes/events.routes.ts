@@ -14,15 +14,35 @@ import {
 import { validate } from "../lib/middlewares/validate.middleware.js";
 import ticketsRouter from "./tickets.routes.js";
 import discountRouter from "./discount.routes.js";
+import { requireEventRole } from "src/lib/middlewares/required-event-role.middleware.js";
 
 const router: Router = express.Router();
 
 router.post("/", requireAuth, validate(CreateEventSchema), createEvent);
-router.get("/:id/edit", requireAuth, getDraftEvent);
-router.patch("/:id", requireAuth, validate(UpdateEventSchema), updateEvent);
-router.delete("/:id", requireAuth, deleteEvent);
 
-router.patch("/:id/publish", requireAuth, handlePublishEvent);
+router.get(
+  "/:id/edit",
+  requireAuth,
+  requireEventRole(["OWNER", "MODERATOR", "COLLABORATOR"]),
+  getDraftEvent,
+);
+
+router.patch(
+  "/:id",
+  requireAuth,
+  requireEventRole(["OWNER", "MODERATOR"]),
+  validate(UpdateEventSchema),
+  updateEvent,
+);
+
+router.delete("/:id", requireAuth, requireEventRole(["OWNER"]), deleteEvent);
+
+router.patch(
+  "/:id/publish",
+  requireAuth,
+  requireEventRole(["OWNER"]),
+  handlePublishEvent,
+);
 
 // router for events/:id/tickets
 router.use("/:id/tickets", ticketsRouter);

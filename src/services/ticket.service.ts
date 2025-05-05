@@ -243,8 +243,8 @@ export async function getTicketInfo(ticketId: string, userId: string) {
           creatorId: true,
           startsAt: true,
           endsAt: true,
-          team: { where: { userId } }
-        }
+          team: { where: { userId } },
+        },
       },
       ticketType: { select: { name: true, price: true, currency: true } },
     },
@@ -261,16 +261,16 @@ export async function getTicketInfo(ticketId: string, userId: string) {
   if (now < ticket.event.startsAt) {
     throw { status: 400, message: "Event has not started yet" };
   }
-  
+
   if (now > ticket.event.endsAt) {
     throw { status: 400, message: "Event has already ended" };
   }
 
   return {
-    id:          ticket.id,
-    eventId:     ticket.eventId,
-    ticketType:  ticket.ticketType,
-    ownerId:     ticket.ownerId,
+    id: ticket.id,
+    eventId: ticket.eventId,
+    ticketType: ticket.ticketType,
+    ownerId: ticket.ownerId,
     isCheckedIn: ticket.isCheckedIn,
   };
 }

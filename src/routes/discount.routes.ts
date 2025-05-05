@@ -13,16 +13,38 @@ import {
   handleDeleteDiscount,
   handleValidateDiscount,
 } from "../controllers/discount.controller.js";
+import { requireEventRole } from "src/lib/middlewares/required-event-role.middleware.js";
 
 const router: Router = express.Router({ mergeParams: true });
 
-router.get("/", requireAuth, handleListDiscounts);
+router.get(
+  "/",
+  requireAuth,
+  requireEventRole(["OWNER", "MODERATOR"]),
+  handleListDiscounts,
+);
 
 router.post(
   "/",
   requireAuth,
+  requireEventRole(["OWNER"]),
   validate(CreateDiscountSchema),
   handleCreateDiscount,
+);
+
+router.patch(
+  "/:codeId",
+  requireAuth,
+  requireEventRole(["OWNER"]),
+  validate(UpdateDiscountSchema),
+  handleUpdateDiscount,
+);
+
+router.delete(
+  "/:codeId",
+  requireAuth,
+  requireEventRole(["OWNER"]),
+  handleDeleteDiscount,
 );
 
 router.post(
@@ -31,13 +53,5 @@ router.post(
   validate(z.object({ code: z.string().min(1) })),
   handleValidateDiscount,
 );
-
-router.patch(
-  "/:codeId",
-  requireAuth,
-  validate(UpdateDiscountSchema),
-  handleUpdateDiscount,
-);
-router.delete("/:codeId", requireAuth, handleDeleteDiscount);
 
 export default router;

@@ -1,3 +1,4 @@
+import { TicketType } from "prisma/client/index.js";
 import type {
   CreateTicketInput,
   UpdateTicketInput,
@@ -153,4 +154,82 @@ export async function deleteTicketType(
   }
 
   await prisma.ticketType.delete({ where: { id: ticketId } });
+}
+
+/**
+ * Public listing: ticket types of a PUBLISHED event
+ * with sold and available counts.
+ */
+export async function getPublicTicketTypes(eventId: string) {
+  const evt = await prisma.event.findUnique({
+    where: { id: eventId, status: "PUBLISHED" },
+    select: { id: true },
+  });
+  if (!evt) {
+    throw { status: 404, message: "Event not found or not published" };
+  }
+
+  const types = await prisma.ticketType.findMany({
+    where: { eventId },
+    include: {
+      _count: { select: { tickets: true } },
+    },
+  });
+
+  return types.map((t) => ({
+    id: t.id,
+    name: t.name,
+    price: t.price,
+    currency: t.currency,
+    sold: t._count.tickets,
+    available: t.quantity - t._count.tickets,
+  }));
+}
+
+/**
+ * Admin listing: ticket types with all their orders and tickets
+ * for DRAFT or PUBLISHED events, but only the owner or team members can view.
+ */
+export async function getAdminTicketTypes(
+  eventId: string,
+  userId: string,
+): Promise<
+  (TicketType & {
+    orders: { id: string; buyerId: string; quantity: number; price: number }[];
+    tickets: { id: string; ownerId: string; isCheckedIn: boolean }[];
+  })[]
+> {
+  const evt = await prisma.event.findUnique({
+    where: { id: eventId },
+    include: { team: { where: { userId } } },
+  });
+  if (!evt) throw { status: 404, message: "Event not found" };
+  if (evt.creatorId !== userId && evt.team.length === 0) {
+    throw { status: 403, message: "Forbidden" };
+  }
+
+  const types = await prisma.ticketType.findMany({
+    where: { eventId },
+    include: {
+      orderItems: {
+        include: { order: true },
+      },
+      tickets: true,
+    },
+  });
+
+  return types.map((t) => ({
+    ...t,
+    orders: t.orderItems.map((oi) => ({
+      id: oi.order.id,
+      buyerId: oi.order.buyerId,
+      quantity: oi.quantity,
+      price: oi.price,
+    })),
+    tickets: t.tickets.map((tc) => ({
+      id: tc.id,
+      ownerId: tc.ownerId,
+      isCheckedIn: tc.isCheckedIn,
+    })),
+  }));
 }

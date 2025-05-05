@@ -2,6 +2,8 @@ import express, { Router } from "express";
 import {
   createTicket,
   deleteTicket,
+  getAdminTickets,
+  getPublicTickets,
   updateTicket,
 } from "src/controllers/ticket.controller.js";
 import { requireAuth } from "src/lib/middlewares/require-auth.middleware.js";
@@ -12,6 +14,12 @@ import {
 } from "src/lib/validators/ticket.schema.js";
 
 const router: Router = express.Router();
+
+// Public listing (no auth)
+router.get("/", getPublicTickets);
+
+// Admin listing (auth)
+router.get("/admin", requireAuth, getAdminTickets);
 
 router.post("/", requireAuth, validate(CreateTicketSchema), createTicket);
 

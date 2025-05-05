@@ -86,3 +86,46 @@ export async function deleteTicket(
     return;
   }
 }
+
+export async function getPublicTickets(
+  req: Request<{ id: string }>,
+  res: Response,
+) {
+  try {
+    const tickets = await ticketService.getPublicTicketTypes(req.params.id);
+    res.status(200).json(tickets);
+    return;
+  } catch (err: any) {
+    if (err?.status) {
+      res.status(err.status).json({ error: err.message });
+      return;
+    }
+    console.error("[getPublicTickets]", err);
+    res.status(500).json({ error: "Internal server error" });
+    return;
+  }
+}
+
+export async function getAdminTickets(
+  req: Request<{ id: string }>,
+  res: Response,
+) {
+  try {
+    const userId = (req as any).user.id as string;
+    const tickets = await ticketService.getAdminTicketTypes(
+      req.params.id,
+      userId,
+    );
+    res.status(200).json(tickets);
+    return;
+  } catch (err: any) {
+    if (err?.status) {
+      res.status(err.status).json({ error: err.message });
+      return;
+    }
+
+    console.error("[getAdminTickets]", err);
+    res.status(500).json({ error: "Internal server error" });
+    return;
+  }
+}

@@ -11,6 +11,7 @@ import {
   updateEvent,
 } from "../controllers/events.controller.js";
 import { validate } from "../lib/middlewares/validate.middleware.js";
+import ticketsRouter from "./tickets.routes.js";
 
 const router: Router = express.Router();
 
@@ -21,5 +22,7 @@ router.get("/:id/edit", requireAuth, getDraftEvent);
 router.patch("/:id", requireAuth, validate(UpdateEventSchema), updateEvent);
 
 router.delete("/:id", requireAuth, deleteEvent);
+
+router.use("/:id/tickets", ticketsRouter);
 
 export default router;

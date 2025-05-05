@@ -234,29 +234,43 @@ export async function getAdminTicketTypes(
   }));
 }
 
-/**
- * Fetch ticket info, verifying user has rights on its event.
- */
 export async function getTicketInfo(ticketId: string, userId: string) {
   const ticket = await prisma.ticket.findUnique({
     where: { id: ticketId },
     include: {
-      event: { select: { creatorId: true, team: { where: { userId } } } },
+      event: {
+        select: {
+          creatorId: true,
+          startsAt: true,
+          endsAt: true,
+          team: { where: { userId } }
+        }
+      },
       ticketType: { select: { name: true, price: true, currency: true } },
     },
   });
+
   if (!ticket) throw { status: 404, message: "Ticket not found" };
 
-  // permission: owner or team member
+  // permiso: owner o team member
   if (ticket.event.creatorId !== userId && ticket.event.team.length === 0) {
     throw { status: 403, message: "Forbidden" };
   }
 
+  const now = new Date();
+  if (now < ticket.event.startsAt) {
+    throw { status: 400, message: "Event has not started yet" };
+  }
+  
+  if (now > ticket.event.endsAt) {
+    throw { status: 400, message: "Event has already ended" };
+  }
+
   return {
-    id: ticket.id,
-    eventId: ticket.eventId,
-    ticketType: ticket.ticketType,
-    ownerId: ticket.ownerId,
+    id:          ticket.id,
+    eventId:     ticket.eventId,
+    ticketType:  ticket.ticketType,
+    ownerId:     ticket.ownerId,
     isCheckedIn: ticket.isCheckedIn,
   };
 }

@@ -13,6 +13,7 @@ import {
 } from "../controllers/event.controller.js";
 import { validate } from "../lib/middlewares/validate.middleware.js";
 import ticketsRouter from "./tickets.routes.js";
+import discountRouter from "./discount.routes.js";
 
 const router: Router = express.Router();
 
@@ -25,5 +26,8 @@ router.patch("/:id/publish", requireAuth, handlePublishEvent);
 
 // router for events/:id/tickets
 router.use("/:id/tickets", ticketsRouter);
+
+// router for events/:id/discount-codes
+router.use("/:id/discount-codes", discountRouter);
 
 export default router;

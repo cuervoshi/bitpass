@@ -33,7 +33,7 @@ Content-Type: application/json
 ### Success Response
 
 - **Status:** `200 OK`
-- **Body:`
+- \*\*Body:`
 
 ```ts
 interface RequestOtpResponse {
@@ -44,10 +44,10 @@ interface RequestOtpResponse {
 
 ### Error Responses
 
-| Status | Body                                | Condition                              |
-| ------ | ----------------------------------- | -------------------------------------- |
-| 400    | `{ error: "Invalid email" }`        | `email` is missing or not a valid format |
-| 500    | `{ error: "Internal server error" }` | Unexpected server error               |
+| Status | Body                                 | Condition                                |
+| ------ | ------------------------------------ | ---------------------------------------- |
+| 400    | `{ error: "Invalid email" }`         | `email` is missing or not a valid format |
+| 500    | `{ error: "Internal server error" }` | Unexpected server error                  |
 
 ---
 
@@ -83,7 +83,7 @@ Content-Type: application/json
 ### Success Response
 
 - **Status:** `200 OK`
-- **Body:`
+- \*\*Body:`
 
 ```ts
 interface VerifyOtpResponse {
@@ -103,13 +103,13 @@ interface VerifyOtpResponse {
 
 ### Error Responses
 
-| Status | Body                                            | Condition                                           |
-| ------ | ----------------------------------------------- | --------------------------------------------------- |
-| 400    | `{ error: "Invalid parameters" }`               | Missing or non-string `email` or `code`             |
-| 401    | `{ error: "Invalid or expired code" }`          | No matching, unused, unexpired OTP found            |
-| 401    | `{ error: "Incorrect code" }`                   | Provided `code` does not match the stored OTP       |
-| 403    | `{ error: "Too many attempts; code blocked" }`  | `attempts` ≥ 5                                      |
-| 500    | `{ error: "Internal server error" }`            | Unexpected server error                             |
+| Status | Body                                           | Condition                                     |
+| ------ | ---------------------------------------------- | --------------------------------------------- |
+| 400    | `{ error: "Invalid parameters" }`              | Missing or non-string `email` or `code`       |
+| 401    | `{ error: "Invalid or expired code" }`         | No matching, unused, unexpired OTP found      |
+| 401    | `{ error: "Incorrect code" }`                  | Provided `code` does not match the stored OTP |
+| 403    | `{ error: "Too many attempts; code blocked" }` | `attempts` ≥ 5                                |
+| 500    | `{ error: "Internal server error" }`           | Unexpected server error                       |
 
 ---
 
@@ -139,7 +139,7 @@ Content-Type: application/json
 ### Success Response
 
 - **Status:** `200 OK`
-- **Body:`
+- \*\*Body:`
 
 ```ts
 interface VerifyNostrResponse {
@@ -159,9 +159,12 @@ interface VerifyNostrResponse {
 
 ### Error Responses
 
-| Status | Body                                   | Condition                              |
-| ------ | -------------------------------------- | -------------------------------------- |
-| 400    | `{ error: "Invalid NIP-98 event" }`    | Body is not a valid NIP-98 event object |
-| 401    | `{ error: "Invalid signature" }`       | Signature verification failed           |
-| 500    | `{ error: "Internal server error" }`   | Unexpected server error                |
+| Status | Body                                 | Condition                               |
+| ------ | ------------------------------------ | --------------------------------------- |
+| 400    | `{ error: "Invalid NIP-98 event" }`  | Body is not a valid NIP-98 event object |
+| 401    | `{ error: "Invalid signature" }`     | Signature verification failed           |
+| 500    | `{ error: "Internal server error" }` | Unexpected server error                 |
+
+```
+
 ```

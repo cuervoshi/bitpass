@@ -14,6 +14,7 @@ This document describes the user-related endpoints, their HTTP methods, request 
 ### Request
 
 - **Headers:**
+
   - `Authorization: Bearer <token>`
 
 - **Body:** None
@@ -34,10 +35,10 @@ This document describes the user-related endpoints, their HTTP methods, request 
 
 ### Error Responses
 
-| Status | Body                                 | Condition                    |
-| ------ | ------------------------------------ | ---------------------------- |
-| 401    | `{ error: "Unauthorized" }`          | Missing or invalid JWT       |
-| 500    | `{ error: "Internal server error" }` | Unexpected server error      |
+| Status | Body                                 | Condition               |
+| ------ | ------------------------------------ | ----------------------- |
+| 401    | `{ error: "Unauthorized" }`          | Missing or invalid JWT  |
+| 500    | `{ error: "Internal server error" }` | Unexpected server error |
 
 ---
 
@@ -51,6 +52,7 @@ This document describes the user-related endpoints, their HTTP methods, request 
 ### Request
 
 - **Headers:**
+
   - `Authorization: Bearer <token>`
 
 - **Body:** None
@@ -59,10 +61,11 @@ This document describes the user-related endpoints, their HTTP methods, request 
 
 - **Status:** `200 OK`
 - **Body:**
+
   ```ts
   interface PaymentMethod {
     id: string;
-    type: 'LIGHTNING' | 'MERCADOPAGO';
+    type: "LIGHTNING" | "MERCADOPAGO";
     lightningAddress?: string;
     lnurlCallback?: string;
     proxyPubkey?: string;
@@ -75,10 +78,10 @@ This document describes the user-related endpoints, their HTTP methods, request 
 
 ### Error Responses
 
-| Status | Body                                 | Condition                    |
-| ------ | ------------------------------------ | ---------------------------- |
-| 401    | `{ error: "Unauthorized" }`          | Missing or invalid JWT       |
-| 500    | `{ error: "Internal server error" }` | Unexpected server error      |
+| Status | Body                                 | Condition               |
+| ------ | ------------------------------------ | ----------------------- |
+| 401    | `{ error: "Unauthorized" }`          | Missing or invalid JWT  |
+| 500    | `{ error: "Internal server error" }` | Unexpected server error |
 
 ---
 
@@ -92,6 +95,7 @@ This document describes the user-related endpoints, their HTTP methods, request 
 ### Request
 
 - **Headers:**
+
   - `Authorization: Bearer <token>`
   - `Content-Type: application/json`
 
@@ -122,7 +126,7 @@ Authorization: Bearer <token>
   ```ts
   interface PaymentMethod {
     id: string;
-    type: 'LIGHTNING';
+    type: "LIGHTNING";
     lightningAddress: string;
     lnurlCallback: string;
     proxyPubkey: string;
@@ -133,12 +137,12 @@ Authorization: Bearer <token>
 
 ### Error Responses
 
-| Status | Body                                         | Condition                                              |
-| ------ | -------------------------------------------- | ------------------------------------------------------ |
-| 400    | `{ error: "Invalid Lightning address format" }` | Malformed address or LNURL-pay validation failed     |
-| 400    | `{ error: "Lightning method already configured" }` | User already has a Lightning method                  |
-| 401    | `{ error: "Unauthorized" }`                  | Missing or invalid JWT                                 |
-| 500    | `{ error: "Internal server error" }`         | Unexpected server error                                |
+| Status | Body                                               | Condition                                        |
+| ------ | -------------------------------------------------- | ------------------------------------------------ |
+| 400    | `{ error: "Invalid Lightning address format" }`    | Malformed address or LNURL-pay validation failed |
+| 400    | `{ error: "Lightning method already configured" }` | User already has a Lightning method              |
+| 401    | `{ error: "Unauthorized" }`                        | Missing or invalid JWT                           |
+| 500    | `{ error: "Internal server error" }`               | Unexpected server error                          |
 
 ---
 
@@ -152,10 +156,12 @@ Authorization: Bearer <token>
 ### Request
 
 - **Headers:**
+
   - `Authorization: Bearer <token>`
   - `Content-Type: application/json`
 
 - **Path Parameters:**
+
   - `pmId: string` — The ID of the payment method to update
 
 - **Body:**
@@ -184,7 +190,7 @@ Authorization: Bearer <token>
   ```ts
   interface PaymentMethod {
     id: string;
-    type: 'LIGHTNING';
+    type: "LIGHTNING";
     lightningAddress: string;
     lnurlCallback: string;
     proxyPubkey: string;
@@ -195,13 +201,13 @@ Authorization: Bearer <token>
 
 ### Error Responses
 
-| Status | Body                                  | Condition                                                |
-| ------ | ------------------------------------- | -------------------------------------------------------- |
-| 400    | `{ error: "Invalid Lightning address format" }` | Malformed address or LNURL-pay validation failed     |
-| 403    | `{ error: "Forbidden" }`              | User does not own this payment method                    |
-| 404    | `{ error: "Payment method not found" }` | No payment method with the given ID                      |
-| 401    | `{ error: "Unauthorized" }`           | Missing or invalid JWT                                   |
-| 500    | `{ error: "Internal server error" }`  | Unexpected server error                                  |
+| Status | Body                                            | Condition                                        |
+| ------ | ----------------------------------------------- | ------------------------------------------------ |
+| 400    | `{ error: "Invalid Lightning address format" }` | Malformed address or LNURL-pay validation failed |
+| 403    | `{ error: "Forbidden" }`                        | User does not own this payment method            |
+| 404    | `{ error: "Payment method not found" }`         | No payment method with the given ID              |
+| 401    | `{ error: "Unauthorized" }`                     | Missing or invalid JWT                           |
+| 500    | `{ error: "Internal server error" }`            | Unexpected server error                          |
 
 ---
 
@@ -215,6 +221,7 @@ Authorization: Bearer <token>
 ### Request
 
 - **Headers:**
+
   - `Authorization: Bearer <token>`
 
 - **Path Parameters:**
@@ -227,9 +234,9 @@ Authorization: Bearer <token>
 
 ### Error Responses
 
-| Status | Body                                  | Condition                                                |
-| ------ | ------------------------------------- | -------------------------------------------------------- |
-| 403    | `{ error: "Forbidden" }`              | User does not own this payment method                    |
-| 404    | `{ error: "Payment method not found" }` | No payment method with the given ID                      |
-| 401    | `{ error: "Unauthorized" }`           | Missing or invalid JWT                                   |
-| 500    | `{ error: "Internal server error" }`  | Unexpected server error                                  |
+| Status | Body                                    | Condition                             |
+| ------ | --------------------------------------- | ------------------------------------- |
+| 403    | `{ error: "Forbidden" }`                | User does not own this payment method |
+| 404    | `{ error: "Payment method not found" }` | No payment method with the given ID   |
+| 401    | `{ error: "Unauthorized" }`             | Missing or invalid JWT                |
+| 500    | `{ error: "Internal server error" }`    | Unexpected server error               |

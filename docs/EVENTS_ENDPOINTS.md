@@ -14,6 +14,7 @@ This document describes the event-related endpoints, their HTTP methods, request
 ### Request
 
 - **Headers:**
+
   - `Authorization: Bearer <token>`
   - `Content-Type: application/json`
 
@@ -28,8 +29,8 @@ interface CreateEventInput {
   location: string;
   startDate: string; // YYYY-MM-DD
   startTime: string; // HH:mm
-  endDate: string;   // YYYY-MM-DD
-  endTime: string;   // HH:mm
+  endDate: string; // YYYY-MM-DD
+  endTime: string; // HH:mm
 }
 ```
 
@@ -66,7 +67,7 @@ interface Event {
   location: string;
   startsAt: string;
   endsAt: string;
-  status: 'DRAFT';
+  status: "DRAFT";
   creatorId: string;
   createdAt: string;
   updatedAt: string;
@@ -75,11 +76,11 @@ interface Event {
 
 ### Error Responses
 
-| Status | Body                                | Condition                                    |
-| ------ | ----------------------------------- | -------------------------------------------- |
-| 400    | `{ error: "Validation failed", details: ValidationError[] }` | Input fails Zod schema validation            |
-| 401    | `{ error: "Unauthorized" }`         | Missing or invalid JWT                       |
-| 500    | `{ error: "Internal server error" }`| Unexpected server error                      |
+| Status | Body                                                         | Condition                         |
+| ------ | ------------------------------------------------------------ | --------------------------------- |
+| 400    | `{ error: "Validation failed", details: ValidationError[] }` | Input fails Zod schema validation |
+| 401    | `{ error: "Unauthorized" }`                                  | Missing or invalid JWT            |
+| 500    | `{ error: "Internal server error" }`                         | Unexpected server error           |
 
 ---
 
@@ -93,6 +94,7 @@ interface Event {
 ### Request
 
 - **Headers:**
+
   - `Authorization: Bearer <token>`
 
 - **Path Parameters:**
@@ -116,12 +118,12 @@ interface DraftEventDetail extends Event {
 
 ### Error Responses
 
-| Status | Body                                   | Condition                              |
-| ------ | -------------------------------------- | -------------------------------------- |
-| 400    | `{ error: "Only draft events can be fetched here" }` | Event is not in DRAFT status          |
-| 403    | `{ error: "Forbidden" }`               | User is not owner or team member       |
-| 404    | `{ error: "Event not found" }`         | No event with given ID                 |
-| 500    | `{ error: "Internal server error" }`   | Unexpected server error                |
+| Status | Body                                                 | Condition                        |
+| ------ | ---------------------------------------------------- | -------------------------------- |
+| 400    | `{ error: "Only draft events can be fetched here" }` | Event is not in DRAFT status     |
+| 403    | `{ error: "Forbidden" }`                             | User is not owner or team member |
+| 404    | `{ error: "Event not found" }`                       | No event with given ID           |
+| 500    | `{ error: "Internal server error" }`                 | Unexpected server error          |
 
 ---
 
@@ -135,10 +137,12 @@ interface DraftEventDetail extends Event {
 ### Request
 
 - **Headers:**
+
   - `Authorization: Bearer <token>`
   - `Content-Type: application/json`
 
 - **Path Parameters:**
+
   - `id: string` — Event UUID
 
 - **Body:**
@@ -152,8 +156,8 @@ interface UpdateEventInput {
   location?: string;
   startDate?: string; // YYYY-MM-DD
   startTime?: string; // HH:mm
-  endDate?: string;   // YYYY-MM-DD
-  endTime?: string;   // HH:mm
+  endDate?: string; // YYYY-MM-DD
+  endTime?: string; // HH:mm
 }
 ```
 
@@ -164,13 +168,13 @@ interface UpdateEventInput {
 
 ### Error Responses
 
-| Status | Body                                  | Condition                                               |
-| ------ | ------------------------------------- | ------------------------------------------------------- |
-| 400    | `{ error: "At least one field must be provided" }` | No body fields provided                                  |
-| 400    | `{ error: "Only drafts can be edited" }` | Event not in DRAFT status                                |
-| 403    | `{ error: "Forbidden" }`              | User is not owner or team member                         |
-| 404    | `{ error: "Event not found" }`        | No event with given ID                                    |
-| 500    | `{ error: "Internal server error" }`  | Unexpected server error                                  |
+| Status | Body                                               | Condition                        |
+| ------ | -------------------------------------------------- | -------------------------------- |
+| 400    | `{ error: "At least one field must be provided" }` | No body fields provided          |
+| 400    | `{ error: "Only drafts can be edited" }`           | Event not in DRAFT status        |
+| 403    | `{ error: "Forbidden" }`                           | User is not owner or team member |
+| 404    | `{ error: "Event not found" }`                     | No event with given ID           |
+| 500    | `{ error: "Internal server error" }`               | Unexpected server error          |
 
 ---
 
@@ -184,6 +188,7 @@ interface UpdateEventInput {
 ### Request
 
 - **Headers:**
+
   - `Authorization: Bearer <token>`
 
 - **Path Parameters:**
@@ -196,12 +201,12 @@ interface UpdateEventInput {
 
 ### Error Responses
 
-| Status | Body                                  | Condition                                      |
-| ------ | ------------------------------------- | ---------------------------------------------- |
-| 400    | `{ error: "Only draft events can be deleted" }` | Event not in DRAFT status                |
-| 403    | `{ error: "Forbidden" }`              | User is not owner or team member               |
-| 404    | `{ error: "Event not found" }`        | No event with given ID                          |
-| 500    | `{ error: "Internal server error" }`  | Unexpected server error                        |
+| Status | Body                                            | Condition                        |
+| ------ | ----------------------------------------------- | -------------------------------- |
+| 400    | `{ error: "Only draft events can be deleted" }` | Event not in DRAFT status        |
+| 403    | `{ error: "Forbidden" }`                        | User is not owner or team member |
+| 404    | `{ error: "Event not found" }`                  | No event with given ID           |
+| 500    | `{ error: "Internal server error" }`            | Unexpected server error          |
 
 ---
 

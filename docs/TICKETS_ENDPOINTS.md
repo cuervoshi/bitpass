@@ -14,6 +14,7 @@ This document describes the ticket-related endpoints, their HTTP methods, reques
 ### Request
 
 - **Path Parameters:**
+
   - `id: string` — Event UUID
 
 - **Headers:** None
@@ -38,10 +39,10 @@ type PublicTicketListResponse = PublicTicketType[];
 
 ### Error Responses
 
-| Status | Body                                    | Condition                                              |
-| ------ | --------------------------------------- | ------------------------------------------------------ |
+| Status | Body                                            | Condition                                          |
+| ------ | ----------------------------------------------- | -------------------------------------------------- |
 | 404    | `{ error: "Event not found or not published" }` | Event does not exist or is not in PUBLISHED status |
-| 500    | `{ error: "Internal server error" }`    | Unexpected server error                                |
+| 500    | `{ error: "Internal server error" }`            | Unexpected server error                            |
 
 ---
 
@@ -55,6 +56,7 @@ type PublicTicketListResponse = PublicTicketType[];
 ### Request
 
 - **Path Parameters:**
+
   - `id: string` — Event UUID
 
 - **Headers:**
@@ -94,11 +96,11 @@ type AdminTicketListResponse = AdminTicketType[];
 
 ### Error Responses
 
-| Status | Body                            | Condition                                          |
-| ------ | ------------------------------- | -------------------------------------------------- |
-| 403    | `{ error: "Forbidden" }`        | User is not owner or team member of the event      |
-| 404    | `{ error: "Event not found" }`  | No event with given ID                             |
-| 500    | `{ error: "Internal server error" }` | Unexpected server error                     |
+| Status | Body                                 | Condition                                     |
+| ------ | ------------------------------------ | --------------------------------------------- |
+| 403    | `{ error: "Forbidden" }`             | User is not owner or team member of the event |
+| 404    | `{ error: "Event not found" }`       | No event with given ID                        |
+| 500    | `{ error: "Internal server error" }` | Unexpected server error                       |
 
 ---
 
@@ -112,9 +114,11 @@ type AdminTicketListResponse = AdminTicketType[];
 ### Request
 
 - **Path Parameters:**
+
   - `id: string` — Event UUID
 
 - **Headers:**
+
   - `Authorization: Bearer <token>`
   - `Content-Type: application/json`
 
@@ -159,13 +163,13 @@ type CreateTicketResponse = TicketType;
 
 ### Error Responses
 
-| Status | Body                                               | Condition                                                                |
-| ------ | -------------------------------------------------- | ------------------------------------------------------------------------ |
-| 400    | `{ error: "Cannot add tickets to a non-draft event" }` | Event is not in DRAFT status                                         |
-| 403    | `{ error: "Forbidden" }`                           | User is not owner or team member                                        |
-| 400    | `{ error: "A ticket with that name already exists for this event" }` | Duplicate ticket name                   |
-| 404    | `{ error: "Event not found" }`                     | No event with given ID                                                   |
-| 500    | `{ error: "Internal server error" }`               | Unexpected server error                                                  |
+| Status | Body                                                                 | Condition                        |
+| ------ | -------------------------------------------------------------------- | -------------------------------- |
+| 400    | `{ error: "Cannot add tickets to a non-draft event" }`               | Event is not in DRAFT status     |
+| 403    | `{ error: "Forbidden" }`                                             | User is not owner or team member |
+| 400    | `{ error: "A ticket with that name already exists for this event" }` | Duplicate ticket name            |
+| 404    | `{ error: "Event not found" }`                                       | No event with given ID           |
+| 500    | `{ error: "Internal server error" }`                                 | Unexpected server error          |
 
 ---
 
@@ -179,10 +183,12 @@ type CreateTicketResponse = TicketType;
 ### Request
 
 - **Path Parameters:**
+
   - `id: string` — Event UUID
   - `ticketId: string` — Ticket type UUID
 
 - **Headers:**
+
   - `Authorization: Bearer <token>`
   - `Content-Type: application/json`
 
@@ -218,14 +224,14 @@ Content-Type: application/json
 
 ### Error Responses
 
-| Status | Body                                              | Condition                                                                 |
-| ------ | ------------------------------------------------- | ------------------------------------------------------------------------- |
-| 400    | `{ error: "Cannot edit tickets of a non-draft event" }` | Event is not in DRAFT status                                          |
-| 400    | `{ error: "Ticket does not belong to this event" }`     | `ticketId` not associated with the event                              |
-| 403    | `{ error: "Forbidden" }`                          | User is not owner or team member                                           |
-| 404    | `{ error: "Ticket type not found" }`              | No ticket type with given `ticketId`                                       |
-| 400    | `{ error: "A ticket with that name already exists for this event" }` | Duplicate ticket name   |
-| 500    | `{ error: "Internal server error" }`              | Unexpected server error                                                     |
+| Status | Body                                                                 | Condition                                |
+| ------ | -------------------------------------------------------------------- | ---------------------------------------- |
+| 400    | `{ error: "Cannot edit tickets of a non-draft event" }`              | Event is not in DRAFT status             |
+| 400    | `{ error: "Ticket does not belong to this event" }`                  | `ticketId` not associated with the event |
+| 403    | `{ error: "Forbidden" }`                                             | User is not owner or team member         |
+| 404    | `{ error: "Ticket type not found" }`                                 | No ticket type with given `ticketId`     |
+| 400    | `{ error: "A ticket with that name already exists for this event" }` | Duplicate ticket name                    |
+| 500    | `{ error: "Internal server error" }`                                 | Unexpected server error                  |
 
 ---
 
@@ -239,6 +245,7 @@ Content-Type: application/json
 ### Request
 
 - **Path Parameters:**
+
   - `id: string` — Event UUID
   - `ticketId: string` — Ticket type UUID
 
@@ -259,10 +266,10 @@ Authorization: Bearer <token>
 
 ### Error Responses
 
-| Status | Body                                                | Condition                                                         |
-| ------ | --------------------------------------------------- | ----------------------------------------------------------------- |
-| 400    | `{ error: "Cannot delete a ticket type with sold tickets" }` | Tickets have already been sold                                |
-| 400    | `{ error: "Ticket does not belong to this event" }` | `ticketId` not associated with the event                         |
-| 403    | `{ error: "Forbidden" }`                            | User is not owner or team member                                   |
-| 404    | `{ error: "Ticket type not found" }`                | No ticket type with given `ticketId`                               |
-| 500    | `{ error: "Internal server error" }`                | Unexpected server error                                            |
+| Status | Body                                                         | Condition                                |
+| ------ | ------------------------------------------------------------ | ---------------------------------------- |
+| 400    | `{ error: "Cannot delete a ticket type with sold tickets" }` | Tickets have already been sold           |
+| 400    | `{ error: "Ticket does not belong to this event" }`          | `ticketId` not associated with the event |
+| 403    | `{ error: "Forbidden" }`                                     | User is not owner or team member         |
+| 404    | `{ error: "Ticket type not found" }`                         | No ticket type with given `ticketId`     |
+| 500    | `{ error: "Internal server error" }`                         | Unexpected server error                  |

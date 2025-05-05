@@ -21,6 +21,7 @@ enum EventStatus {
 
 enum EventRole {
   OWNER
+  MODERATOR
   COLLABORATOR
 }
 

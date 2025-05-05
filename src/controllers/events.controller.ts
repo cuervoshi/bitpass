@@ -18,7 +18,7 @@ export async function createEvent(req: Request, res: Response) {
 export async function updateEvent(
   req: Request<{ id: string }>,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     const userId = (req as any).user.id as string;
@@ -43,7 +43,7 @@ export async function deleteEvent(req: Request<{ id: string }>, res: Response) {
     const userId = (req as any).user.id as string;
     const { id } = req.params;
     await eventService.deleteEvent(id, userId);
-    
+
     res.status(204).send();
     return;
   } catch (err: any) {
@@ -53,6 +53,30 @@ export async function deleteEvent(req: Request<{ id: string }>, res: Response) {
     }
 
     console.error("[deleteEvent] Unexpected error:", err);
+    res.status(500).json({ error: "Internal server error" });
+    return;
+  }
+}
+
+export async function getDraftEvent(
+  req: Request<{ id: string }>,
+  res: Response,
+) {
+  try {
+    const userId = (req as any).user.id as string;
+    const { id } = req.params;
+
+    const evt = await eventService.getDraftEvent(id, userId);
+    res.status(200).json(evt);
+
+    return;
+  } catch (err: any) {
+    if (err?.status && err?.message) {
+      res.status(err.status).json({ error: err.message });
+      return;
+    }
+
+    console.error("[getDraftEvent] Unexpected error:", err);
     res.status(500).json({ error: "Internal server error" });
     return;
   }

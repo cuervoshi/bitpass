@@ -12,9 +12,10 @@ import {
   updateEvent,
 } from "../controllers/event.controller.js";
 import { validate } from "../lib/middlewares/validate.middleware.js";
+import { requireEventRole } from "src/lib/middlewares/required-event-role.middleware.js";
 import ticketsRouter from "./tickets.routes.js";
 import discountRouter from "./discount.routes.js";
-import { requireEventRole } from "src/lib/middlewares/required-event-role.middleware.js";
+import teamRouter from "./team.routes.js";
 
 const router: Router = express.Router();
 
@@ -49,5 +50,8 @@ router.use("/:id/tickets", ticketsRouter);
 
 // router for events/:id/discount-codes
 router.use("/:id/discount-codes", discountRouter);
+
+// router for events/:id/team
+router.use("/:id/team", teamRouter);
 
 export default router;

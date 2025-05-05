@@ -1,76 +1,48 @@
-# Update Lightning Payment Method
+# PATCH /users/me/payment-methods/:pmId/lightning
 
-### Endpoint
+**Description:** Update the LN address of an existing payment method.
 
-`PATCH /users/me/payment-methods/{pmId}/lightning`
+**Authentication:** Requires `requireAuth`.  
+**Validation:** Request body validated with `CreateLightningSchema`.
 
-### Description
+---
 
-Updates the Lightning address of an existing payment method.
+## Path Parameters
 
-### Parameters
+- `pmId` — UUID of the payment method to update.
 
-| Name             | In   | Type   | Required | Description                |
-| ---------------- | ---- | ------ | -------- | -------------------------- |
-| pmId             | path | string | Yes      | UUID of the payment method |
-| lightningAddress | body | string | Yes      | New Lightning address      |
+---
 
-### Responses
-
-#### 200 OK
-
-**Content-Type:** `application/json`  
-**Example Response:**
+## Request Body
 
 ```json
 {
-  "id": "<pmId>",
+  "lightningAddress": "newUser@domain.com"
+}
+```
+
+---
+
+## Response
+
+**Status:** 200 OK
+
+```json
+{
+  "id": "uuid-def456",
   "type": "LIGHTNING",
-  "lightningAddress": "new@domain.com",
-  "lnurlCallback": "https://domain.com/.well-known/lnurlp/new",
-  "proxyPubkey": "<pubkey>",
-  "proxyPrivkeyEncrypted": "<encrypted key>",
-  "createdAt": "<ISO timestamp>",
-  "updatedAt": "<ISO timestamp>"
+  "lightningAddress": "newUser@domain.com",
+  "createdAt": "2025-05-05T15:10:00.000Z",
+  "updatedAt": "2025-05-05T15:45:00.000Z"
 }
 ```
 
-#### 400 Bad Request
+| Field              | Type     | Description                        |
+| ------------------ | -------- | ---------------------------------- |
+| `id`               | `string` | UUID of the payment method         |
+| `type`             | `string` | Method type (`LIGHTNING`)          |
+| `lightningAddress` | `string` | Updated LN address                 |
+| `createdAt`        | `string` | ISO timestamp of original creation |
+| `updatedAt`        | `string` | ISO timestamp of last update       |
 
-**Example Response:**
-
-```json
-{
-  "error": "Invalid Lightning address format"
-}
-```
-
-#### 401 Unauthorized
-
-**Example Response:**
-
-```json
-{
-  "error": "Unauthorized"
-}
-```
-
-#### 404 Not Found
-
-**Example Response:**
-
-```json
-{
-  "error": "Payment method not found"
-}
-```
-
-#### 500 Internal Server Error
-
-**Example Response:**
-
-```json
-{
-  "error": "Internal server error"
-}
-```
+> **Note:** Sensitive fields are omitted.

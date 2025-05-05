@@ -1,73 +1,42 @@
-# Add Lightning Payment Method
+# POST /users/me/payment-methods/lightning
 
-### Endpoint
+**Description:** Add a new Lightning payment method.
 
-`POST /users/me/payment-methods/lightning`
+**Authentication:** Requires `requireAuth`.  
+**Validation:** Request body validated with `CreateLightningSchema`.
 
-### Description
+---
 
-Configures a new Lightning payment method for the authenticated user.
-
-### Parameters
-
-| Name             | In   | Type   | Required | Description               |
-| ---------------- | ---- | ------ | -------- | ------------------------- |
-| lightningAddress | body | string | Yes      | Lightning address (LUD16) |
-
-### Responses
-
-#### 201 Created
-
-**Content-Type:** `application/json`  
-**Example Response:**
+## Request Body
 
 ```json
 {
-  "id": "<pmId>",
+  "lightningAddress": "user@domain.com"
+}
+```
+
+---
+
+## Response
+
+**Status:** 201 Created
+
+```json
+{
+  "id": "uuid-def456",
   "type": "LIGHTNING",
   "lightningAddress": "user@domain.com",
-  "lnurlCallback": "https://domain.com/.well-known/lnurlp/user",
-  "proxyPubkey": "<pubkey>",
-  "proxyPrivkeyEncrypted": "<encrypted key>",
-  "createdAt": "<ISO timestamp>",
-  "updatedAt": "<ISO timestamp>"
+  "createdAt": "2025-05-05T15:10:00.000Z",
+  "updatedAt": "2025-05-05T15:10:00.000Z"
 }
 ```
 
-#### 400 Bad Request
+| Field              | Type     | Description                  |
+| ------------------ | -------- | ---------------------------- |
+| `id`               | `string` | UUID of the payment method   |
+| `type`             | `string` | Method type (`LIGHTNING`)    |
+| `lightningAddress` | `string` | LN address (lud16)           |
+| `createdAt`        | `string` | ISO timestamp of creation    |
+| `updatedAt`        | `string` | ISO timestamp of last update |
 
-**Example Response:**
-
-```json
-{
-  "error": "Invalid Lightning address format"
-}
-```
-
-_or_
-
-```json
-{
-  "error": "Lightning method already configured"
-}
-```
-
-#### 401 Unauthorized
-
-**Example Response:**
-
-```json
-{
-  "error": "Unauthorized"
-}
-```
-
-#### 500 Internal Server Error
-
-**Example Response:**
-
-```json
-{
-  "error": "Internal server error"
-}
-```
+> **Note:** Sensitive fields are omitted.

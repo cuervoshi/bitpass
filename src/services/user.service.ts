@@ -3,16 +3,40 @@ import { getPrisma } from "./prisma.service.js";
 import { generateSecretKey, getPublicKey } from "nostr-tools";
 import { encryptHex } from "src/lib/crypto.util.js";
 import { bytesToHex } from "@noble/hashes/utils";
+import { Prisma } from "prisma/client/index.js";
 
 const prisma = getPrisma();
 
 /**
- * Retrieves basic user profile information.
- * @param userId - UUID of the user
- * @returns Selected user fields
- * @throws { status:404, message } if the user is not found
+ * Payload seguro para el perfil de usuario
  */
-export async function getProfile(userId: string) {
+export type UserProfile = Prisma.UserGetPayload<{
+  select: {
+    id: true;
+    email: true;
+    nostrPubKey: true;
+    createdAt: true;
+    updatedAt: true;
+  };
+}>;
+
+/**
+ * Payload seguro para métodos de pago (sin campos sensibles)
+ */
+export type SafePaymentMethod = Prisma.PaymentMethodGetPayload<{
+  select: {
+    id: true;
+    type: true;
+    lightningAddress: true;
+    createdAt: true;
+    updatedAt: true;
+  };
+}>;
+
+/**
+ * Retrieves basic user profile information.
+ */
+export async function getProfile(userId: string): Promise<UserProfile> {
   const user = await prisma.user.findUnique({
     where: { id: userId },
     select: {
@@ -31,18 +55,16 @@ export async function getProfile(userId: string) {
 
 /**
  * Lists all payment methods belonging to the user.
- * @param userId - UUID of the user
- * @returns Array of payment methods
  */
-export async function getPaymentMethods(userId: string) {
+export async function getPaymentMethods(
+  userId: string,
+): Promise<SafePaymentMethod[]> {
   return prisma.paymentMethod.findMany({
     where: { userId },
     select: {
       id: true,
       type: true,
       lightningAddress: true,
-      lnurlCallback: true,
-      proxyPubkey: true,
       createdAt: true,
       updatedAt: true,
     },
@@ -50,24 +72,18 @@ export async function getPaymentMethods(userId: string) {
 }
 
 /**
- * Adds a Lightning payment method for the user:
- * 1) Validates the LNURL-pay endpoint (.well-known)
- * 2) Generates a Nostr keypair for the proxy account
- * 3) Encrypts the proxy secret key with AES-GCM
- * 4) Persists the PaymentMethod with callback and encrypted proxy key
+ * Adds a Lightning payment method for the user.
  */
 export async function addLightningMethod(
   userId: string,
   lightningAddress: string,
-) {
-  // Split "user@domain.com" into user and domain
-  const [user, domain] = lightningAddress.split("@");
-  if (!user || !domain) {
+): Promise<SafePaymentMethod> {
+  const [userPart, domain] = lightningAddress.split("@");
+  if (!userPart || !domain) {
     throw { status: 400, message: "Invalid Lightning address format" };
   }
 
-  // Fetch and validate the LNURL-pay endpoint
-  const lnurlUrl = `https://${domain}/.well-known/lnurlp/${user}`;
+  const lnurlUrl = `https://${domain}/.well-known/lnurlp/${userPart}`;
   let lnurlData: any;
   try {
     const resp = await axios.get(lnurlUrl, { timeout: 5000 });
@@ -83,15 +99,11 @@ export async function addLightningMethod(
     throw { status: 400, message: "Invalid LNURL-pay response" };
   }
 
-  // Generate a Nostr secret key (hex) and derive its public key for the proxy account
   const secretBytes = generateSecretKey();
   const proxyPubkey = getPublicKey(secretBytes);
   const proxySecretHex = bytesToHex(secretBytes);
-
-  // Encrypt the secret key before storing
   const encryptedSecret = encryptHex(proxySecretHex);
 
-  // Create the new payment method record, including the proxy keys
   try {
     return await prisma.paymentMethod.create({
       data: {
@@ -102,9 +114,15 @@ export async function addLightningMethod(
         proxyPubkey,
         proxyPrivkeyEncrypted: encryptedSecret,
       },
+      select: {
+        id: true,
+        type: true,
+        lightningAddress: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
   } catch (err: any) {
-    // Handle unique constraint violation: one LIGHTNING method per user
     if (err.code === "P2002") {
       throw { status: 400, message: "Lightning method already configured" };
     }
@@ -114,9 +132,6 @@ export async function addLightningMethod(
 
 /**
  * Deletes a payment method belonging to the user.
- * @param userId - UUID of the user
- * @param pmId - UUID of the payment method
- * @throws { status:404|403 } on missing or forbidden access
  */
 export async function deletePaymentMethod(
   userId: string,
@@ -124,41 +139,28 @@ export async function deletePaymentMethod(
 ): Promise<void> {
   const pm = await prisma.paymentMethod.findUnique({
     where: { id: pmId },
+    select: { userId: true },
   });
-
   if (!pm) {
     throw { status: 404, message: "Payment method not found" };
   }
-
   if (pm.userId !== userId) {
     throw { status: 403, message: "Forbidden" };
   }
-
-  await prisma.paymentMethod.delete({
-    where: { id: pmId },
-  });
+  await prisma.paymentMethod.delete({ where: { id: pmId } });
 }
 
 /**
- * Updates the LNURL-pay address for an existing Lightning payment method.
- * 1) Validates the new LNURL-pay endpoint
- * 2) Updates lightningAddress + lnurlCallback in la BD
+ * Updates the LNURL-pay address for an existing Lightning method.
  */
 export async function updateLightningMethod(
   userId: string,
   pmId: string,
   newAddress: string,
-) {
-  // 1) Fetch the existing PaymentMethod
+): Promise<SafePaymentMethod> {
   const pm = await prisma.paymentMethod.findUnique({
     where: { id: pmId },
-    select: {
-      id: true,
-      userId: true,
-      type: true,
-      proxyPubkey: true,
-      proxyPrivkeyEncrypted: true,
-    },
+    select: { userId: true, type: true },
   });
   if (!pm) {
     throw { status: 404, message: "Payment method not found" };
@@ -170,14 +172,12 @@ export async function updateLightningMethod(
     throw { status: 400, message: "Not a Lightning method" };
   }
 
-  // 2) Parse newAddress
-  const [user, domain] = newAddress.split("@");
-  if (!user || !domain) {
+  const [userPart, domain] = newAddress.split("@");
+  if (!userPart || !domain) {
     throw { status: 400, message: "Invalid Lightning address format" };
   }
 
-  // 3) Fetch & validate LNURL-pay
-  const lnurlUrl = `https://${domain}/.well-known/lnurlp/${user}`;
+  const lnurlUrl = `https://${domain}/.well-known/lnurlp/${userPart}`;
   let lnurlData: any;
   try {
     const resp = await axios.get(lnurlUrl, { timeout: 5000 });
@@ -193,13 +193,19 @@ export async function updateLightningMethod(
     throw { status: 400, message: "Invalid LNURL-pay response" };
   }
 
-  // 4) Update the record
   return prisma.paymentMethod.update({
     where: { id: pmId },
     data: {
       lightningAddress: newAddress,
       lnurlCallback: lnurlData.callback,
       updatedAt: new Date(),
+    },
+    select: {
+      id: true,
+      type: true,
+      lightningAddress: true,
+      createdAt: true,
+      updatedAt: true,
     },
   });
 }

@@ -1,8 +1,10 @@
-// src/controllers/user.controller.ts
-
 import type { Request, Response } from "express";
 import * as userService from "../services/user.service.js";
-import type { CreateLightningInput } from "../lib/validators/payment.schema.js";
+import type {
+  SafePaymentMethod,
+  UserProfile,
+} from "../services/user.service.js";
+import type { CreateLightningInput } from "src/lib/validators/payment.schema.js";
 
 /**
  * GET /users/me
@@ -12,9 +14,8 @@ export async function handleGetProfile(
   res: Response,
 ): Promise<void> {
   const userId = (req as any).user.id as string;
-  const profile = await userService.getProfile(userId);
+  const profile: UserProfile = await userService.getProfile(userId);
   res.status(200).json(profile);
-  return;
 }
 
 /**
@@ -25,9 +26,9 @@ export async function handleGetPaymentMethods(
   res: Response,
 ): Promise<void> {
   const userId = (req as any).user.id as string;
-  const methods = await userService.getPaymentMethods(userId);
+  const methods: SafePaymentMethod[] =
+    await userService.getPaymentMethods(userId);
   res.status(200).json(methods);
-  return;
 }
 
 /**
@@ -39,9 +40,11 @@ export async function handleAddLightning(
 ): Promise<void> {
   const userId = (req as any).user.id as string;
   const { lightningAddress } = req.body;
-  const pm = await userService.addLightningMethod(userId, lightningAddress);
+  const pm: SafePaymentMethod = await userService.addLightningMethod(
+    userId,
+    lightningAddress,
+  );
   res.status(201).json(pm);
-  return;
 }
 
 /**
@@ -54,37 +57,31 @@ export async function handleDeletePaymentMethod(
   const userId = (req as any).user.id as string;
   await userService.deletePaymentMethod(userId, req.params.pmId);
   res.status(204).send();
-  return;
 }
 
 /**
  * PATCH /users/me/payment-methods/:pmId/lightning
- * Body: { lightningAddress: string }
  */
 export async function handleUpdateLightning(
-  req: Request<{ pmId: string }, {}, { lightningAddress: string }>,
+  req: Request<{ pmId: string }, {}, CreateLightningInput>,
   res: Response,
 ): Promise<void> {
   try {
     const userId = (req as any).user.id as string;
     const { pmId } = req.params;
     const { lightningAddress } = req.body;
-
-    const updated = await userService.updateLightningMethod(
+    const updated: SafePaymentMethod = await userService.updateLightningMethod(
       userId,
       pmId,
       lightningAddress,
     );
-
     res.status(200).json(updated);
-    return;
   } catch (err: any) {
     if (err.status && err.message) {
       res.status(err.status).json({ error: err.message });
-      return;
+    } else {
+      console.error("[handleUpdateLightning]", err);
+      res.status(500).json({ error: "Internal server error" });
     }
-    console.error("[handleUpdateLightning]", err);
-    res.status(500).json({ error: "Internal server error" });
-    return;
   }
 }

@@ -20,7 +20,7 @@ const createApp = (): Application => {
   app.use("/auth", authRouter);
   app.use("/users", usersRouter);
   app.use("/events", eventsRouter);
-  app.use("/tickets", checkinRouter);
+  app.use("/checkin", checkinRouter);
 
   // 404 handler for undefined routes
   app.use((req, res) => {

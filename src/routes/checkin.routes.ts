@@ -16,7 +16,7 @@ router.get(
 );
 
 router.patch(
-  "/:ticketId/checkin",
+  "/:ticketId/use",
   requireAuth,
   requireEventRole(["OWNER", "MODERATOR", "COLLABORATOR"]),
   handleCheckInTicket,

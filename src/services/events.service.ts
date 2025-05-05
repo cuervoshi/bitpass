@@ -56,3 +56,23 @@ export async function updateDraftEvent(
     data
   });
 }
+
+/**
+ * Deletes a draft event owned by userId.
+ * - 404 if not found
+ * - 403 if not owner
+ * - 400 if not in DRAFT status
+ */
+export async function deleteEvent(eventId: string, userId: string): Promise<void> {
+  const evt = await prisma.event.findUnique({ where: { id: eventId } });
+  if (!evt) {
+    throw { status: 404, message: "Event not found" };
+  }
+  if (evt.creatorId !== userId) {
+    throw { status: 403, message: "Forbidden" };
+  }
+  if (evt.status !== "DRAFT") {
+    throw { status: 400, message: "Only draft events can be deleted" };
+  }
+  await prisma.event.delete({ where: { id: eventId } });
+}

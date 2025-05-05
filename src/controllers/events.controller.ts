@@ -1,10 +1,10 @@
 import type { NextFunction, Request, Response } from "express";
-import { createDraftEvent, updateDraftEvent } from "../services/events.service.js";
+import * as eventService from "../services/events.service.js";
 
 export async function createEvent(req: Request, res: Response) {
   try {
     const userId = (req as any).user.id as string;
-    const event = await createDraftEvent(req.body, userId);
+    const event = await eventService.createDraftEvent(req.body, userId);
 
     res.status(201).json(event);
     return;
@@ -23,7 +23,7 @@ export async function updateEvent(
   try {
     const userId = (req as any).user.id as string;
     const { id } = req.params;
-    const updated = await updateDraftEvent(id, userId, req.body);
+    const updated = await eventService.updateDraftEvent(id, userId, req.body);
     res.status(200).json(updated);
     return;
   } catch (err: any) {
@@ -33,6 +33,26 @@ export async function updateEvent(
     }
 
     console.error("[updateEvent] Unexpected error:", err);
+    res.status(500).json({ error: "Internal server error" });
+    return;
+  }
+}
+
+export async function deleteEvent(req: Request<{ id: string }>, res: Response) {
+  try {
+    const userId = (req as any).user.id as string;
+    const { id } = req.params;
+    await eventService.deleteEvent(id, userId);
+    
+    res.status(204).send();
+    return;
+  } catch (err: any) {
+    if (err?.status && err?.message) {
+      res.status(err.status).json({ error: err.message });
+      return;
+    }
+
+    console.error("[deleteEvent] Unexpected error:", err);
     res.status(500).json({ error: "Internal server error" });
     return;
   }

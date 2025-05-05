@@ -1,5 +1,5 @@
 import express, { Application } from "express";
-import { logger } from "./lib/middlewares/logger.js";
+import { logger } from "./lib/middlewares/logger.middleware.js";
 import { errorHandler } from "./lib/middlewares/error-handler.middleware.js";
 
 import healthRouter from "./routes/health.routes.js";

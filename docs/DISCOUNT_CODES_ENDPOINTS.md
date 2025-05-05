@@ -14,6 +14,7 @@ This document describes the discount code-related endpoints under `/events/:id/d
 ### Request
 
 - **Headers:**
+
   - `Authorization: Bearer <token>`
 
 - **Path Parameters:**
@@ -23,6 +24,7 @@ This document describes the discount code-related endpoints under `/events/:id/d
 
 - **Status:** `200 OK`
 - **Body:**
+
   ```ts
   interface DiscountCode {
     id: string;
@@ -39,12 +41,12 @@ This document describes the discount code-related endpoints under `/events/:id/d
 
 ### Error Responses
 
-| Status | Body                                 | Condition                           |
-| ------ | ------------------------------------ | ----------------------------------- |
-| 401    | `{ error: "Unauthorized" }`          | Missing or invalid JWT              |
-| 403    | `{ error: "Forbidden" }`             | User is not owner or team member    |
-| 404    | `{ error: "Event not found" }`       | No event with the given ID          |
-| 500    | `{ error: "Internal server error" }` | Unexpected server error             |
+| Status | Body                                 | Condition                        |
+| ------ | ------------------------------------ | -------------------------------- |
+| 401    | `{ error: "Unauthorized" }`          | Missing or invalid JWT           |
+| 403    | `{ error: "Forbidden" }`             | User is not owner or team member |
+| 404    | `{ error: "Event not found" }`       | No event with the given ID       |
+| 500    | `{ error: "Internal server error" }` | Unexpected server error          |
 
 ---
 
@@ -58,10 +60,12 @@ This document describes the discount code-related endpoints under `/events/:id/d
 ### Request
 
 - **Headers:**
+
   - `Authorization: Bearer <token>`
   - `Content-Type: application/json`
 
 - **Path Parameters:**
+
   - `id: string` — UUID of the event
 
 - **Body:**
@@ -88,12 +92,12 @@ This document describes the discount code-related endpoints under `/events/:id/d
 
 ### Error Responses
 
-| Status | Body                                              | Condition                                          |
-| ------ | ------------------------------------------------- | -------------------------------------------------- |
-| 400    | `{ error: "...validation message..." }`           | Schema validation or business rule violation       |
-| 403    | `{ error: "Forbidden" }`                          | Event not in DRAFT or user not owner               |
-| 404    | `{ error: "Event not found" }`                    | No event with the given ID                         |
-| 500    | `{ error: "Internal server error" }`              | Unexpected server error                            |
+| Status | Body                                    | Condition                                    |
+| ------ | --------------------------------------- | -------------------------------------------- |
+| 400    | `{ error: "...validation message..." }` | Schema validation or business rule violation |
+| 403    | `{ error: "Forbidden" }`                | Event not in DRAFT or user not owner         |
+| 404    | `{ error: "Event not found" }`          | No event with the given ID                   |
+| 500    | `{ error: "Internal server error" }`    | Unexpected server error                      |
 
 ---
 
@@ -107,10 +111,12 @@ This document describes the discount code-related endpoints under `/events/:id/d
 ### Request
 
 - **Headers:**
+
   - `Authorization: Bearer <token>`
   - `Content-Type: application/json`
 
 - **Path Parameters:**
+
   - `id: string` — UUID of the event
 
 - **Body:**
@@ -133,14 +139,14 @@ This document describes the discount code-related endpoints under `/events/:id/d
 
 ### Error Responses
 
-| Status | Body                                | Condition                                     |
-| ------ | ----------------------------------- | --------------------------------------------- |
-| 400    | `{ error: "Discount code expired" }`         | Code has passed its expiration           |
-| 400    | `{ error: "Discount code usage limit reached" }` | `maxUses` exceeded                      |
-| 403    | `{ error: "Event not published" }`            | Cannot apply before event is published   |
-| 404    | `{ error: "Discount code not found" }`        | Code not found for the event             |
-| 401    | `{ error: "Unauthorized" }`                   | Missing or invalid JWT                        |
-| 500    | `{ error: "Internal server error" }`          | Unexpected server error                       |
+| Status | Body                                             | Condition                              |
+| ------ | ------------------------------------------------ | -------------------------------------- |
+| 400    | `{ error: "Discount code expired" }`             | Code has passed its expiration         |
+| 400    | `{ error: "Discount code usage limit reached" }` | `maxUses` exceeded                     |
+| 403    | `{ error: "Event not published" }`               | Cannot apply before event is published |
+| 404    | `{ error: "Discount code not found" }`           | Code not found for the event           |
+| 401    | `{ error: "Unauthorized" }`                      | Missing or invalid JWT                 |
+| 500    | `{ error: "Internal server error" }`             | Unexpected server error                |
 
 ---
 
@@ -154,17 +160,19 @@ This document describes the discount code-related endpoints under `/events/:id/d
 ### Request
 
 - **Headers:**
+
   - `Authorization: Bearer <token>`
   - `Content-Type: application/json`
 
 - **Path Parameters:**
+
   - `id: string` — UUID of the event
   - `codeId: string` — UUID of the discount code
 
 - **Body:**
   ```ts
   interface UpdateDiscountInput {
-    code?: string;       // 1–10 characters
+    code?: string; // 1–10 characters
     percentage?: number; // 1–100
     expiresAt?: string;
     maxUses?: number;
@@ -181,13 +189,13 @@ This document describes the discount code-related endpoints under `/events/:id/d
 
 ### Error Responses
 
-| Status | Body                                 | Condition                                                 |
-| ------ | ------------------------------------ | --------------------------------------------------------- |
-| 400    | `{ error: "At least one field must be provided" }` | No fields provided                                |
-| 400    | `{ error: "Can only edit codes on draft events" }` | Event not in DRAFT status                           |
-| 403    | `{ error: "Forbidden" }`             | User is not event owner                                    |
-| 404    | `{ error: "Discount code not found" }` | No code with the given ID                                |
-| 500    | `{ error: "Internal server error" }` | Unexpected server error                                   |
+| Status | Body                                               | Condition                 |
+| ------ | -------------------------------------------------- | ------------------------- |
+| 400    | `{ error: "At least one field must be provided" }` | No fields provided        |
+| 400    | `{ error: "Can only edit codes on draft events" }` | Event not in DRAFT status |
+| 403    | `{ error: "Forbidden" }`                           | User is not event owner   |
+| 404    | `{ error: "Discount code not found" }`             | No code with the given ID |
+| 500    | `{ error: "Internal server error" }`               | Unexpected server error   |
 
 ---
 
@@ -201,6 +209,7 @@ This document describes the discount code-related endpoints under `/events/:id/d
 ### Request
 
 - **Headers:**
+
   - `Authorization: Bearer <token>`
 
 - **Path Parameters:**
@@ -214,9 +223,9 @@ This document describes the discount code-related endpoints under `/events/:id/d
 
 ### Error Responses
 
-| Status | Body                                 | Condition                                                 |
-| ------ | ------------------------------------ | --------------------------------------------------------- |
-| 400    | `{ error: "Can only delete codes on draft events" }` | Event not in DRAFT                             |
-| 403    | `{ error: "Forbidden" }`             | User is not event owner                                    |
-| 404    | `{ error: "Discount code not found" }` | No code with the given ID                                |
-| 500    | `{ error: "Internal server error" }` | Unexpected server error                                   |
+| Status | Body                                                 | Condition                 |
+| ------ | ---------------------------------------------------- | ------------------------- |
+| 400    | `{ error: "Can only delete codes on draft events" }` | Event not in DRAFT        |
+| 403    | `{ error: "Forbidden" }`                             | User is not event owner   |
+| 404    | `{ error: "Discount code not found" }`               | No code with the given ID |
+| 500    | `{ error: "Internal server error" }`                 | Unexpected server error   |

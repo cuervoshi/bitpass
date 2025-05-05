@@ -8,6 +8,7 @@ import {
   createEvent,
   deleteEvent,
   getDraftEvent,
+  handlePublishEvent,
   updateEvent,
 } from "../controllers/event.controller.js";
 import { validate } from "../lib/middlewares/validate.middleware.js";
@@ -19,6 +20,8 @@ router.post("/", requireAuth, validate(CreateEventSchema), createEvent);
 router.get("/:id/edit", requireAuth, getDraftEvent);
 router.patch("/:id", requireAuth, validate(UpdateEventSchema), updateEvent);
 router.delete("/:id", requireAuth, deleteEvent);
+
+router.patch("/:id/publish", requireAuth, handlePublishEvent);
 
 // router for events/:id/tickets
 router.use("/:id/tickets", ticketsRouter);

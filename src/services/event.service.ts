@@ -136,3 +136,48 @@ export async function getDraftEvent(
 
   return evt;
 }
+
+/**
+ * Publish a draft event, after validating:
+ * - Event exists and is in DRAFT
+ * - Caller is owner or team member
+ * - At least one ticketType exists
+ * - At least one paymentMethod exists
+ */
+export async function publishEvent(eventId: string, userId: string) {
+  const evt = await prisma.event.findUnique({
+    where: { id: eventId },
+    include: {
+      ticketTypes: { select: { id: true } },
+      paymentMethods: { select: { id: true } },
+      team: { where: { userId } },
+    },
+  });
+
+  if (!evt) {
+    throw { status: 404, message: "Event not found" };
+  }
+
+  if (evt.creatorId !== userId && evt.team.length === 0) {
+    throw { status: 403, message: "Forbidden" };
+  }
+
+  if (evt.status !== "DRAFT") {
+    throw { status: 400, message: "Only draft events can be published" };
+  }
+
+  if (evt.ticketTypes.length === 0) {
+    throw { status: 400, message: "Event must have at least one ticket type" };
+  }
+  if (evt.paymentMethods.length === 0) {
+    throw {
+      status: 400,
+      message: "Event must have at least one payment method",
+    };
+  }
+
+  return await prisma.event.update({
+    where: { id: eventId },
+    data: { status: "PUBLISHED" },
+  });
+}

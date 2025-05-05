@@ -81,3 +81,27 @@ export async function getDraftEvent(
     return;
   }
 }
+
+/**
+ * PATCH /events/:id/publish
+ */
+export async function handlePublishEvent(
+  req: Request<{ id: string }>,
+  res: Response,
+): Promise<void> {
+  try {
+    const userId = (req as any).user.id as string;
+    const { id } = req.params;
+    const published = await eventService.publishEvent(id, userId);
+    res.status(200).json(published);
+    return;
+  } catch (err: any) {
+    if (err?.status && err?.message) {
+      res.status(err.status).json({ error: err.message });
+      return;
+    }
+    console.error("[handlePublishEvent] Unexpected error:", err);
+    res.status(500).json({ error: "Internal server error" });
+    return;
+  }
+}

@@ -31,20 +31,12 @@ _No parameters._
 
 #### 401 Unauthorized
 
-**Example Response:**
-
 ```json
-{
-  "error": "Unauthorized"
-}
+{ "error": "Unauthorized" }
 ```
 
 #### 500 Internal Server Error
 
-**Example Response:**
-
 ```json
-{
-  "error": "Internal server error"
-}
+{ "error": "Internal server error" }
 ```

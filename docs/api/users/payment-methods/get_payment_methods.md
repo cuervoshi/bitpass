@@ -1,33 +1,46 @@
-# GET /users/me/payment-methods
+# List Payment Methods
 
-**Description:** List all payment methods configured by the user.
+### Endpoint
 
-**Authentication:** Requires `requireAuth`. The `userId` is obtained from the session/JWT.
+`GET /users/me/payment-methods`
 
----
+### Description
 
-## Response
+Retrieves all payment methods configured by the authenticated user. Sensitive data such as encrypted keys are not exposed.
 
-**Status:** 200 OK
+### Parameters
+
+_No parameters._
+
+### Responses
+
+#### 200 OK
+
+**Content-Type:** `application/json`  
+**Example Response:**
 
 ```json
 [
   {
-    "id": "uuid-abc123",
+    "id": "<pmId>",
     "type": "LIGHTNING",
     "lightningAddress": "user@domain.com",
-    "createdAt": "2025-05-05T14:22:00.000Z",
-    "updatedAt": "2025-05-05T14:22:00.000Z"
+    "lnurlCallback": "https://domain.com/.well-known/lnurlp/user",
+    "proxyPubkey": "<proxyPubkey>",
+    "createdAt": "<ISO timestamp>",
+    "updatedAt": "<ISO timestamp>"
   }
 ]
 ```
 
-| Field              | Type     | Description                    |
-| ------------------ | -------- | ------------------------------ |
-| `id`               | `string` | UUID of the payment method     |
-| `type`             | `string` | Method type (e.g. `LIGHTNING`) |
-| `lightningAddress` | `string` | LN address (lud16)             |
-| `createdAt`        | `string` | ISO timestamp of creation      |
-| `updatedAt`        | `string` | ISO timestamp of last update   |
+#### 401 Unauthorized
 
-> **Note:** Sensitive fields are not exposed.
+```json
+{ "error": "Unauthorized" }
+```
+
+#### 500 Internal Server Error
+
+```json
+{ "error": "Internal server error" }
+```

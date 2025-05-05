@@ -1,42 +1,58 @@
-# POST /users/me/payment-methods/lightning
+# Add Lightning Payment Method
 
-**Description:** Add a new Lightning payment method.
+### Endpoint
 
-**Authentication:** Requires `requireAuth`.  
-**Validation:** Request body validated with `CreateLightningSchema`.
+`POST /users/me/payment-methods/lightning`
 
----
+### Description
 
-## Request Body
+Configures a new Lightning payment method for the authenticated user.
+
+### Body Parameters
+
+| Name             | In   | Type   | Required | Description               |
+| ---------------- | ---- | ------ | -------- | ------------------------- |
+| lightningAddress | body | string | Yes      | Lightning address (LUD16) |
+
+### Responses
+
+#### 201 Created
+
+**Content-Type:** `application/json`  
+**Example Response:**
 
 ```json
 {
-  "lightningAddress": "user@domain.com"
-}
-```
-
----
-
-## Response
-
-**Status:** 201 Created
-
-```json
-{
-  "id": "uuid-def456",
+  "id": "<pmId>",
   "type": "LIGHTNING",
   "lightningAddress": "user@domain.com",
-  "createdAt": "2025-05-05T15:10:00.000Z",
-  "updatedAt": "2025-05-05T15:10:00.000Z"
+  "lnurlCallback": "https://domain.com/.well-known/lnurlp/user",
+  "proxyPubkey": "<proxyPubkey>",
+  "createdAt": "<ISO timestamp>",
+  "updatedAt": "<ISO timestamp>"
 }
 ```
 
-| Field              | Type     | Description                  |
-| ------------------ | -------- | ---------------------------- |
-| `id`               | `string` | UUID of the payment method   |
-| `type`             | `string` | Method type (`LIGHTNING`)    |
-| `lightningAddress` | `string` | LN address (lud16)           |
-| `createdAt`        | `string` | ISO timestamp of creation    |
-| `updatedAt`        | `string` | ISO timestamp of last update |
+#### 400 Bad Request
 
-> **Note:** Sensitive fields are omitted.
+```json
+{ "error": "Invalid Lightning address format" }
+```
+
+_or_
+
+```json
+{ "error": "Lightning method already configured" }
+```
+
+#### 401 Unauthorized
+
+```json
+{ "error": "Unauthorized" }
+```
+
+#### 500 Internal Server Error
+
+```json
+{ "error": "Internal server error" }
+```

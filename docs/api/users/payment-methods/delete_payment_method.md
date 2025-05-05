@@ -1,19 +1,39 @@
-# DELETE /users/me/payment-methods/:pmId
+# Delete Payment Method
 
-**Description:** Delete a payment method.
+### Endpoint
 
-**Authentication:** Requires `requireAuth`.
+`DELETE /users/me/payment-methods/{pmId}`
 
----
+### Description
 
-## Path Parameters
+Deletes a configured payment method for the authenticated user.
 
-- `pmId` — UUID of the payment method to delete.
+### Path Parameters
 
----
+| Name | In   | Type   | Required | Description                |
+| ---- | ---- | ------ | -------- | -------------------------- |
+| pmId | path | string | Yes      | UUID of the payment method |
 
-## Response
+### Responses
 
-**Status:** 204 No Content
+#### 204 No Content
 
-> **Note:** No response body. Sensitive fields are omitted.
+_No response body._
+
+#### 401 Unauthorized
+
+```json
+{ "error": "Unauthorized" }
+```
+
+#### 404 Not Found
+
+```json
+{ "error": "Payment method not found" }
+```
+
+#### 500 Internal Server Error
+
+```json
+{ "error": "Internal server error" }
+```

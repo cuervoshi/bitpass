@@ -6,6 +6,7 @@ import healthRouter from "./routes/health.routes.js";
 import authRouter from "./routes/auth.routes.js";
 import usersRouter from "./routes/user.routes.js";
 import eventsRouter from "./routes/events.routes.js";
+import checkinRouter from "./routes/checkin.routes.js";
 
 const createApp = (): Application => {
   const app: Application = express();
@@ -19,6 +20,7 @@ const createApp = (): Application => {
   app.use("/auth", authRouter);
   app.use("/users", usersRouter);
   app.use("/events", eventsRouter);
+  app.use("/tickets", checkinRouter);
 
   // 404 handler for undefined routes
   app.use((req, res) => {

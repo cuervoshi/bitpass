@@ -233,3 +233,50 @@ export async function getAdminTicketTypes(
     })),
   }));
 }
+
+/**
+ * Fetch ticket info, verifying user has rights on its event.
+ */
+export async function getTicketInfo(ticketId: string, userId: string) {
+  const ticket = await prisma.ticket.findUnique({
+    where: { id: ticketId },
+    include: {
+      event: { select: { creatorId: true, team: { where: { userId } } } },
+      ticketType: { select: { name: true, price: true, currency: true } },
+    },
+  });
+  if (!ticket) throw { status: 404, message: "Ticket not found" };
+
+  // permission: owner or team member
+  if (ticket.event.creatorId !== userId && ticket.event.team.length === 0) {
+    throw { status: 403, message: "Forbidden" };
+  }
+
+  return {
+    id: ticket.id,
+    eventId: ticket.eventId,
+    ticketType: ticket.ticketType,
+    ownerId: ticket.ownerId,
+    isCheckedIn: ticket.isCheckedIn,
+  };
+}
+
+/**
+ * Mark a ticket as checked-in, verifying the same permissions.
+ */
+export async function checkInTicket(ticketId: string, userId: string) {
+  const info = await getTicketInfo(ticketId, userId);
+  if (info.isCheckedIn) {
+    throw { status: 400, message: "Ticket already checked in" };
+  }
+
+  const updated = await prisma.ticket.update({
+    where: { id: ticketId },
+    data: { isCheckedIn: true },
+  });
+
+  return {
+    id: updated.id,
+    isCheckedIn: updated.isCheckedIn,
+  };
+}

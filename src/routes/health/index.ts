@@ -1,6 +1,6 @@
 import { Request, RequestHandler, Response } from "express";
-import { getVersion } from "../../lib/appInfo.js";
-import { HealthResponse } from "../../types/index.js";
+import { getVersion } from "@/lib/appInfo.js";
+import { HealthResponse } from "@/types/index.js";
 
 export const GET: RequestHandler = (req: Request, res: Response) => {
   const healthResponse: HealthResponse = {

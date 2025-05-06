@@ -1,12 +1,12 @@
 import type { Request, RequestHandler, Response } from "express";
-import { requireAuth } from "../../../../../lib/middlewares/require-auth.middleware.js";
-import { requireEventRole } from "../../../../../lib/middlewares/required-event-role.middleware.js";
-import { validate } from "../../../../../lib/middlewares/validate.middleware.js";
+import { requireAuth } from "@/lib/middlewares/require-auth.middleware.js";
+import { requireEventRole } from "@/lib/middlewares/required-event-role.middleware.js";
+import { validate } from "@/lib/middlewares/validate.middleware.js";
 import {
   UpdateTicketSchema,
   type UpdateTicketInput,
-} from "../../../../../lib/validators/ticket.schema.js";
-import * as ticketService from "../../../../../services/ticket.service.js";
+} from "@/lib/validators/ticket.schema.js";
+import * as ticketService from "@/services/ticket.service.js";
 
 // PATCH /events/:id/tickets/:ticketId
 export const PATCH: RequestHandler[] = [

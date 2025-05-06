@@ -5,7 +5,7 @@ import {
   getEventHash,
   type Event as NostrEvent,
 } from "nostr-tools";
-import { getPrisma } from "../../../services/prisma.service.js";
+import { getPrisma } from "@/services/prisma.service.js";
 
 const prisma = getPrisma();
 

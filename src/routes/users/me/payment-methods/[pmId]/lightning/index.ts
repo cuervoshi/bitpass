@@ -1,11 +1,11 @@
 import type { Request, RequestHandler, Response } from "express";
-import { requireAuth } from "../../../../../../lib/middlewares/require-auth.middleware.js";
-import { validate } from "../../../../../../lib/middlewares/validate.middleware.js";
+import { requireAuth } from "@/lib/middlewares/require-auth.middleware.js";
+import { validate } from "@/lib/middlewares/validate.middleware.js";
 import {
   CreateLightningSchema,
   type CreateLightningInput,
-} from "../../../../../../lib/validators/payment.schema.js";
-import * as userService from "../../../../../../services/user.service.js";
+} from "@/lib/validators/payment.schema.js";
+import * as userService from "@/services/user.service.js";
 
 // PATCH /users/me/payment-methods/:pmId/lightning
 export const PATCH: RequestHandler[] = [

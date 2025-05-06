@@ -1,8 +1,8 @@
 import type { Request, RequestHandler, Response } from "express";
-import { requireAuth } from "../../lib/middlewares/require-auth.middleware.js";
-import { validate } from "../../lib/middlewares/validate.middleware.js";
-import { CreateEventSchema } from "../../lib/validators/event.schema.js";
-import * as eventService from "../../services/event.service.js";
+import { requireAuth } from "@/lib/middlewares/require-auth.middleware.js";
+import { validate } from "@/lib/middlewares/validate.middleware.js";
+import { CreateEventSchema } from "@/lib/validators/event.schema.js";
+import * as eventService from "@/services/event.service.js";
 
 // POST /events
 export const POST: RequestHandler[] = [

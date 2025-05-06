@@ -4,11 +4,11 @@ import {
   PaymentMethod,
   TicketType,
   type Event as EventModel,
-} from "../../prisma/client/index.js";
+} from "~/prisma/client/index.js";
 import type {
   CreateEventInput,
   UpdateEventInput,
-} from "../lib/validators/event.schema.js";
+} from "@/lib/validators/event.schema.js";
 import { getPrisma } from "./prisma.service.js";
 
 const prisma = getPrisma();

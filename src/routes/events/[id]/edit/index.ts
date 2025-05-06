@@ -1,7 +1,7 @@
 import type { Request, RequestHandler, Response } from "express";
-import { requireAuth } from "../../../../lib/middlewares/require-auth.middleware.js";
-import { requireEventRole } from "../../../../lib/middlewares/required-event-role.middleware.js";
-import * as eventService from "../../../../services/event.service.js";
+import { requireAuth } from "@/lib/middlewares/require-auth.middleware.js";
+import { requireEventRole } from "@/lib/middlewares/required-event-role.middleware.js";
+import * as eventService from "@/services/event.service.js";
 
 // GET /events/:id/edit
 export const GET: RequestHandler[] = [

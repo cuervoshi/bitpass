@@ -1,0 +1,7 @@
+{
+    "watch": [
+        "src"
+    ],
+    "ext": "ts",
+    "exec": "concurrently \"npx tsc && tsc-alias && node --env-file=.env dist/index.js\""
+}

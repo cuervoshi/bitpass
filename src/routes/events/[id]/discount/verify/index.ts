@@ -1,8 +1,8 @@
 import type { Request, RequestHandler, Response } from "express";
-import { requireAuth } from "../../../../../lib/middlewares/require-auth.middleware.js";
-import { validate } from "../../../../../lib/middlewares/validate.middleware.js";
+import { requireAuth } from "@/lib/middlewares/require-auth.middleware.js";
+import { validate } from "@/lib/middlewares/validate.middleware.js";
 import { z } from "zod";
-import * as dcService from "../../../../../services/discount.service.js";
+import * as dcService from "@/services/discount.service.js";
 
 // POST /events/:id/discount/verify
 export const POST: RequestHandler[] = [

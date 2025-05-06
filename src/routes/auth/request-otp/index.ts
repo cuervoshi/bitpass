@@ -1,5 +1,5 @@
 import type { Request, RequestHandler, Response } from "express";
-import { getPrisma } from "../../../services/prisma.service.js";
+import { getPrisma } from "@/services/prisma.service.js";
 
 const prisma = getPrisma();
 

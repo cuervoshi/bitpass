@@ -1,7 +1,7 @@
 import type {
   CreateDiscountInput,
   UpdateDiscountInput,
-} from "../lib/validators/discount.schema.js";
+} from "@/lib/validators/discount.schema.js";
 import { getPrisma } from "./prisma.service.js";
 
 const prisma = getPrisma();

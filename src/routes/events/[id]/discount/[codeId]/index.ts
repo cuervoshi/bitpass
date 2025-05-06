@@ -1,7 +1,7 @@
 import type { Request, RequestHandler, Response } from "express";
-import { requireAuth } from "../../../../../lib/middlewares/require-auth.middleware.js";
-import { requireEventRole } from "../../../../../lib/middlewares/required-event-role.middleware.js";
-import * as dcService from "../../../../../services/discount.service.js";
+import { requireAuth } from "@/lib/middlewares/require-auth.middleware.js";
+import { requireEventRole } from "@/lib/middlewares/required-event-role.middleware.js";
+import * as dcService from "@/services/discount.service.js";
 
 // PATCH /events/:id/discount/:codeId
 export const PATCH: RequestHandler[] = [

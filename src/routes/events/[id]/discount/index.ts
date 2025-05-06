@@ -1,9 +1,9 @@
 import type { Request, RequestHandler, Response } from "express";
-import { requireAuth } from "../../../../lib/middlewares/require-auth.middleware.js";
-import { requireEventRole } from "../../../../lib/middlewares/required-event-role.middleware.js";
-import { validate } from "../../../../lib/middlewares/validate.middleware.js";
-import { CreateDiscountSchema } from "../../../../lib/validators/discount.schema.js";
-import * as dcService from "../../../../services/discount.service.js";
+import { requireAuth } from "@/lib/middlewares/require-auth.middleware.js";
+import { requireEventRole } from "@/lib/middlewares/required-event-role.middleware.js";
+import { validate } from "@/lib/middlewares/validate.middleware.js";
+import { CreateDiscountSchema } from "@/lib/validators/discount.schema.js";
+import * as dcService from "@/services/discount.service.js";
 
 // GET /events/:id/discount
 export const GET = [

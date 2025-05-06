@@ -1,6 +1,6 @@
 import type { Request, RequestHandler, Response } from "express";
-import { requireAuth } from "../../../../lib/middlewares/require-auth.middleware.js";
-import * as userService from "../../../../services/user.service.js";
+import { requireAuth } from "@/lib/middlewares/require-auth.middleware.js";
+import * as userService from "@/services/user.service.js";
 
 // GET /users/me/payment-methods
 export const GET: RequestHandler[] = [

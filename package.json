@@ -5,11 +5,10 @@
   "description": "Node.js server with Express and TypeScript",
   "main": "dist/index.js",
   "scripts": {
-    "postinstall": "prisma generate",
     "start": "node dist/index.js",
     "dev": "nodemon --exec node --loader ts-node/esm src/index.ts",
-    "build": "tsc && prisma generate && npm run copy-prisma",
-    "copy-prisma": "rimraf dist/prisma && cpx \"prisma/**/*\" dist/prisma",
+    "build": "tsc && prisma generate && pnpm run copy-prisma-client",
+    "copy-prisma-client": "rimraf dist/prisma && cpx \"prisma/**/*\" dist/prisma",
     "format": "pnpm prettier --write .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -13,7 +13,7 @@ import {
   handleDeleteDiscount,
   handleValidateDiscount,
 } from "../controllers/discount.controller.js";
-import { requireEventRole } from "src/lib/middlewares/required-event-role.middleware.js";
+import { requireEventRole } from "../lib/middlewares/required-event-role.middleware.js";
 
 const router: Router = express.Router({ mergeParams: true });
 

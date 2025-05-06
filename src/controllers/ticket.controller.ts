@@ -3,7 +3,7 @@ import type {
   CreateTicketInput,
   UpdateTicketInput,
 } from "../lib/validators/ticket.schema.js";
-import * as ticketService from "src/services/ticket.service.js";
+import * as ticketService from "../services/ticket.service.js";
 
 export async function createTicket(
   req: Request<{ id: string }>,

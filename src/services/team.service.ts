@@ -1,7 +1,7 @@
 import {
   AddTeamInput,
   UpdateTeamInput,
-} from "src/lib/validators/team.schema.js";
+} from "../lib/validators/team.schema.js";
 import { getPrisma } from "./prisma.service.js";
 
 const prisma = getPrisma();

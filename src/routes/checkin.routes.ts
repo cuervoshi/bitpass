@@ -3,8 +3,8 @@ import { requireAuth } from "../lib/middlewares/require-auth.middleware.js";
 import {
   handleFetchTicket,
   handleCheckInTicket,
-} from "src/controllers/checkin.controller.js";
-import { requireEventRole } from "src/lib/middlewares/required-event-role.middleware.js";
+} from "../controllers/checkin.controller.js";
+import { requireEventRole } from "../lib/middlewares/required-event-role.middleware.js";
 
 const router: Router = express.Router();
 

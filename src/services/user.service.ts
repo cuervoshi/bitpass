@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getPrisma } from "./prisma.service.js";
 import { generateSecretKey, getPublicKey } from "nostr-tools";
-import { encryptHex } from "src/lib/crypto.util.js";
+import { encryptHex } from "../lib/crypto.util.js";
 import { bytesToHex } from "@noble/hashes/utils";
 import { Prisma } from "prisma/client/index.js";
 

@@ -8,7 +8,7 @@ import {
   handleUpdateLightning,
 } from "../controllers/user.controller.js";
 import { validate } from "../lib/middlewares/validate.middleware.js";
-import { CreateLightningSchema } from "src/lib/validators/payment.schema.js";
+import { CreateLightningSchema } from "../lib/validators/payment.schema.js";
 
 const router: Router = express.Router();
 

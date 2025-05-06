@@ -5,14 +5,14 @@ import {
   getAdminTickets,
   getPublicTickets,
   updateTicket,
-} from "src/controllers/ticket.controller.js";
-import { requireAuth } from "src/lib/middlewares/require-auth.middleware.js";
-import { requireEventRole } from "src/lib/middlewares/required-event-role.middleware.js";
-import { validate } from "src/lib/middlewares/validate.middleware.js";
+} from "../controllers/ticket.controller.js";
+import { requireAuth } from "../lib/middlewares/require-auth.middleware.js";
+import { requireEventRole } from "../lib/middlewares/required-event-role.middleware.js";
+import { validate } from "../lib/middlewares/validate.middleware.js";
 import {
   CreateTicketSchema,
   UpdateTicketSchema,
-} from "src/lib/validators/ticket.schema.js";
+} from "../lib/validators/ticket.schema.js";
 
 const router: Router = express.Router();
 

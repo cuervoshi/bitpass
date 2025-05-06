@@ -4,7 +4,7 @@ import type {
   SafePaymentMethod,
   UserProfile,
 } from "../services/user.service.js";
-import type { CreateLightningInput } from "src/lib/validators/payment.schema.js";
+import type { CreateLightningInput } from "../lib/validators/payment.schema.js";
 
 /**
  * GET /users/me

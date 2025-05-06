@@ -11,7 +11,7 @@ import {
   handleUpdateTeam,
   handleDeleteTeam,
 } from "../controllers/team.controller.js";
-import { requireEventRole } from "src/lib/middlewares/required-event-role.middleware.js";
+import { requireEventRole } from "../lib/middlewares/required-event-role.middleware.js";
 
 const router: Router = express.Router();
 

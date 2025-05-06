@@ -12,7 +12,7 @@ import {
   updateEvent,
 } from "../controllers/event.controller.js";
 import { validate } from "../lib/middlewares/validate.middleware.js";
-import { requireEventRole } from "src/lib/middlewares/required-event-role.middleware.js";
+import { requireEventRole } from "../lib/middlewares/required-event-role.middleware.js";
 import ticketsRouter from "./tickets.routes.js";
 import discountRouter from "./discount.routes.js";
 import teamRouter from "./team.routes.js";

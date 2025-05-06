@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import { EventRole } from "prisma/client/index.js";
-import { getPrisma } from "src/services/prisma.service.js";
+import { getPrisma } from "../../services/prisma.service.js";
 
 /**
  * Middleware factory: ensures the authenticated user has one of the given roles

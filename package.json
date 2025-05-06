@@ -5,6 +5,7 @@
   "description": "Node.js server with Express and TypeScript",
   "main": "dist/index.js",
   "scripts": {
+    "postinstall": "prisma generate",
     "start": "node dist/index.js",
     "dev": "nodemon --exec node --loader ts-node/esm src/index.ts",
     "build": "tsc",

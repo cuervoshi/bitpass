@@ -1,4 +1,5 @@
 {
+  "ts-node": { "require": ["tsconfig-paths/register"] },
   "compilerOptions": {
     "target": "ESNext",
     "module": "NodeNext",
@@ -10,7 +11,12 @@
     "declaration": true,
     "rootDir": "src",
     "skipLibCheck": true,
-    "baseUrl": "."
+    "noImplicitAny": false,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "~/prisma/*": ["prisma/*"]
+    }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

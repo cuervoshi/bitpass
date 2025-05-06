@@ -1,13 +1,13 @@
 {
-  "name": "health-server",
+  "name": "bitpass-server",
   "version": "1.0.0",
   "type": "module",
   "description": "Node.js server with Express and TypeScript",
   "main": "dist/index.js",
   "scripts": {
-    "start": "node dist/index.js",
-    "dev": "nodemon --exec node --loader ts-node/esm src/index.ts",
-    "build": "tsc && prisma generate && pnpm run copy-prisma-client",
+    "start": "node --env-file=.env dist/index.js",
+    "dev": "nodemon",
+    "build": "npx tsc && tsc-alias && prisma generate && pnpm run copy-prisma-client",
     "copy-prisma-client": "rimraf dist/prisma && cpx \"prisma/**/*\" dist/prisma",
     "format": "pnpm prettier --write .",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -18,7 +18,9 @@
     "axios": "^1.9.0",
     "cpx": "^1.5.0",
     "express": "^5.1.0",
+    "express-file-routing": "^3.1.0",
     "jsonwebtoken": "^9.0.2",
+    "module-alias": "^2.2.3",
     "nostr-tools": "^2.12.0",
     "rimraf": "^6.0.1",
     "zod": "^3.24.3"
@@ -27,12 +29,18 @@
     "@types/express": "^5.0.1",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^20.5.9",
+    "concurrently": "^9.1.2",
     "eslint": "^9.26.0",
     "eslint-config-prettier": "^10.1.2",
     "nodemon": "^3.0.1",
     "prettier": "^3.5.3",
     "prisma": "^6.7.0",
-    "ts-node": "^10.9.1",
+    "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.16",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.2.2"
+  },
+  "_moduleAliases": {
+    "@/": "./src/"
   }
 }

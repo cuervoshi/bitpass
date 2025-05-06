@@ -1,8 +1,8 @@
-import { TicketType } from "../../prisma/client/index.js";
+import { TicketType } from "~/prisma/client/index.js";
 import type {
   CreateTicketInput,
   UpdateTicketInput,
-} from "../lib/validators/ticket.schema.js";
+} from "@/lib/validators/ticket.schema.js";
 import { getPrisma } from "./prisma.service.js";
 
 const prisma = getPrisma();

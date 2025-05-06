@@ -5,8 +5,9 @@ import {
   scryptSync,
 } from "crypto";
 import { bytesToHex, hexToBytes } from "@noble/hashes/utils";
+import { config } from "./env.js";
 
-const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY!;
+const ENCRYPTION_KEY = config.encryptionKey;
 if (!ENCRYPTION_KEY) throw new Error("Missing ENCRYPTION_KEY env var");
 
 const KEY = scryptSync(ENCRYPTION_KEY, "static-salt", 32);

@@ -7,15 +7,16 @@ import {
   type UpdateTeamInput,
 } from "@/lib/validators/team.schema.js";
 import * as teamService from "@/services/team.service.js";
+import { ExtendedRequest, RestHandler } from "@/types/rest.js";
 
 // PATCH /events/:id/team/:userId
-export const PATCH: RequestHandler[] = [
+export const PATCH: RestHandler[] = [
   requireAuth,
   requireEventRole(["OWNER"]),
   validate(UpdateTeamSchema),
-  async (req: Request, res: Response) => {
+  async (req: ExtendedRequest, res: Response) => {
     try {
-      const currentUserId = (req as any).userId as string;
+      const currentUserId = req.userId as string;
       const updated = await teamService.updateTeamMember(
         req.params.id,
         req.params.userId,
@@ -32,17 +33,19 @@ export const PATCH: RequestHandler[] = [
 ];
 
 // DELETE /events/:id/team/:userId
-export const del = [
+export const DEL: RestHandler[] = [
   requireAuth,
   requireEventRole(["OWNER"]),
-  async (req: Request<{ id: string; userId: string }>, res: Response) => {
+  async (req: ExtendedRequest, res: Response) => {
     try {
-      const currentUserId = (req as any).userId as string;
+      const currentUserId = req.userId as string;
+      
       await teamService.deleteTeamMember(
         req.params.id,
         req.params.userId,
         currentUserId,
       );
+      
       res.status(204).send();
     } catch (err: any) {
       res

@@ -1,21 +1,21 @@
-import type { Request, RequestHandler, Response } from "express";
+import type { Response } from "express";
 import { requireAuth } from "@/lib/middlewares/require-auth.middleware.js";
 import { requireEventRole } from "@/lib/middlewares/required-event-role.middleware.js";
 import { validate } from "@/lib/middlewares/validate.middleware.js";
 import {
   UpdateTicketSchema,
-  type UpdateTicketInput,
 } from "@/lib/validators/ticket.schema.js";
 import * as ticketService from "@/services/ticket.service.js";
+import { ExtendedRequest, RestHandler } from "@/types/rest.js";
 
 // PATCH /events/:id/tickets/:ticketId
-export const PATCH: RequestHandler[] = [
+export const PATCH: RestHandler[] = [
   requireAuth,
   requireEventRole(["OWNER", "MODERATOR"]),
   validate(UpdateTicketSchema),
-  async (req: Request, res: Response) => {
+  async (req: ExtendedRequest, res: Response) => {
     try {
-      const userId = (req as any).userId as string;
+      const userId = req.userId as string;
       const { id: eventId, ticketId } = req.params;
       const updated = await ticketService.updateTicketType(
         eventId,
@@ -39,12 +39,12 @@ export const PATCH: RequestHandler[] = [
 ];
 
 // DELETE /events/:id/tickets/:ticketId
-export const DEL: RequestHandler[] = [
+export const DEL: RestHandler[] = [
   requireAuth,
   requireEventRole(["OWNER", "MODERATOR"]),
-  async (req: Request, res: Response) => {
+  async (req: ExtendedRequest, res: Response) => {
     try {
-      const userId = (req as any).userId as string;
+      const userId = req.userId as string;
       const { id: eventId, ticketId } = req.params;
       await ticketService.deleteTicketType(eventId, ticketId, userId);
       res.status(204).send();

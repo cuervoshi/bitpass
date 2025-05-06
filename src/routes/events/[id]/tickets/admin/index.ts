@@ -2,14 +2,15 @@ import type { Request, RequestHandler, Response } from "express";
 import { requireAuth } from "@/lib/middlewares/require-auth.middleware.js";
 import { requireEventRole } from "@/lib/middlewares/required-event-role.middleware.js";
 import * as ticketService from "@/services/ticket.service.js";
+import { ExtendedRequest, RestHandler } from "@/types/rest.js";
 
 // GET /events/:id/tickets/admin
-export const GET: RequestHandler[] = [
+export const GET: RestHandler[] = [
   requireAuth,
   requireEventRole(["OWNER", "MODERATOR"]),
-  async (req: Request, res: Response) => {
+  async (req: ExtendedRequest, res: Response) => {
     try {
-      const userId = (req as any).userId as string;
+      const userId = req.userId as string;
       const tickets = await ticketService.getAdminTicketTypes(
         req.params.id,
         userId,

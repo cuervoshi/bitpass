@@ -6,13 +6,14 @@ import {
   type CreateLightningInput,
 } from "@/lib/validators/payment.schema.js";
 import * as userService from "@/services/user.service.js";
+import { ExtendedRequest, RestHandler } from "@/types/rest.js";
 
 // POST /users/me/payment-methods/lightning
-export const POST: RequestHandler[] = [
+export const POST: RestHandler[] = [
   requireAuth,
   validate(CreateLightningSchema),
-  async (req: Request, res: Response) => {
-    const userId = (req as any).userId as string;
+  async (req: ExtendedRequest, res: Response) => {
+    const userId = req.userId as string;
     const { lightningAddress } = req.body;
     const pm = await userService.addLightningMethod(userId, lightningAddress);
     res.status(201).json(pm);

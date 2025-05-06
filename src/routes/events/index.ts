@@ -3,14 +3,15 @@ import { requireAuth } from "@/lib/middlewares/require-auth.middleware.js";
 import { validate } from "@/lib/middlewares/validate.middleware.js";
 import { CreateEventSchema } from "@/lib/validators/event.schema.js";
 import * as eventService from "@/services/event.service.js";
+import { ExtendedRequest, RestHandler } from "@/types/rest.js";
 
 // POST /events
-export const POST: RequestHandler[] = [
+export const POST: RestHandler[] = [
   requireAuth,
   validate(CreateEventSchema),
-  async (req: Request, res: Response) => {
+  async (req: ExtendedRequest, res: Response) => {
     try {
-      const userId = (req as any).userId as string;
+      const userId = req.userId as string;
       const event = await eventService.createDraftEvent(req.body, userId);
       res.status(201).json(event);
     } catch (err) {

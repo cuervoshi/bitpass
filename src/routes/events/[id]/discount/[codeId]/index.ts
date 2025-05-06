@@ -1,15 +1,16 @@
-import type { Request, RequestHandler, Response } from "express";
+import type { Request, Response } from "express";
 import { requireAuth } from "@/lib/middlewares/require-auth.middleware.js";
 import { requireEventRole } from "@/lib/middlewares/required-event-role.middleware.js";
 import * as dcService from "@/services/discount.service.js";
+import { ExtendedRequest, RestHandler } from "@/types/rest.js";
 
 // PATCH /events/:id/discount/:codeId
-export const PATCH: RequestHandler[] = [
+export const PATCH: RestHandler[] = [
   requireAuth,
   requireEventRole(["OWNER"]),
-  async (req: Request, res: Response) => {
+  async (req: ExtendedRequest, res: Response) => {
     try {
-      const userId = (req as any).userId as string;
+      const userId = req.userId as string;
       const updated = await dcService.updateDiscountCode(
         req.params.id,
         req.params.codeId,

@@ -4,9 +4,9 @@ import { requireEventRole } from "@/lib/middlewares/required-event-role.middlewa
 import { validate } from "@/lib/middlewares/validate.middleware.js";
 import {
   CreateTicketSchema,
-  type CreateTicketInput,
 } from "@/lib/validators/ticket.schema.js";
 import * as ticketService from "@/services/ticket.service.js";
+import { ExtendedRequest, RestHandler } from "@/types/rest.js";
 
 // GET /events/:id/tickets
 export const GET: RequestHandler = async (req: Request, res: Response) => {
@@ -22,13 +22,13 @@ export const GET: RequestHandler = async (req: Request, res: Response) => {
 };
 
 // POST /events/:id/tickets
-export const POST: RequestHandler[] = [
+export const POST: RestHandler[] = [
   requireAuth,
   requireEventRole(["OWNER", "MODERATOR"]),
   validate(CreateTicketSchema),
-  async (req: Request, res: Response) => {
+  async (req: ExtendedRequest, res: Response) => {
     try {
-      const userId = (req as any).userId as string;
+      const userId = req.userId as string;
       const eventId = req.params.id;
       const ticket = await ticketService.createTicketType(
         eventId,

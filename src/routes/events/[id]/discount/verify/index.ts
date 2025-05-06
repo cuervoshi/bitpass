@@ -1,11 +1,12 @@
-import type { Request, RequestHandler, Response } from "express";
+import type { Request, Response } from "express";
 import { requireAuth } from "@/lib/middlewares/require-auth.middleware.js";
 import { validate } from "@/lib/middlewares/validate.middleware.js";
 import { z } from "zod";
 import * as dcService from "@/services/discount.service.js";
+import { RestHandler } from "@/types/rest.js";
 
 // POST /events/:id/discount/verify
-export const POST: RequestHandler[] = [
+export const POST: RestHandler[] = [
   requireAuth,
   validate(z.object({ code: z.string().min(1) })),
   async (req: Request, res: Response) => {

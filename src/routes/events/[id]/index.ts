@@ -2,14 +2,15 @@ import type { Request, RequestHandler, Response } from "express";
 import { requireAuth } from "@/lib/middlewares/require-auth.middleware.js";
 import { requireEventRole } from "@/lib/middlewares/required-event-role.middleware.js";
 import * as eventService from "@/services/event.service.js";
+import { ExtendedRequest, RestHandler } from "@/types/rest.js";
 
 // PATCH /events/:id
-export const PATCH = [
+export const PATCH: RestHandler[] = [
   requireAuth,
   requireEventRole(["OWNER", "MODERATOR"]),
-  async (req: Request<{ id: string }>, res: Response) => {
+  async (req: ExtendedRequest, res: Response) => {
     try {
-      const userId = (req as any).userId as string;
+      const userId = req.userId as string;
       const updated = await eventService.updateDraftEvent(
         req.params.id,
         userId,
@@ -28,12 +29,12 @@ export const PATCH = [
 ];
 
 // DELETE /events/:id
-export const DEL: RequestHandler[] = [
+export const DEL: RestHandler[] = [
   requireAuth,
   requireEventRole(["OWNER"]),
-  async (req: Request, res: Response) => {
+  async (req: ExtendedRequest, res: Response) => {
     try {
-      const userId = (req as any).userId as string;
+      const userId = req.userId as string;
       await eventService.deleteEvent(req.params.id, userId);
       res.status(204).send();
     } catch (err: any) {

@@ -1,7 +1,8 @@
 import { ZodError, type ZodSchema } from "zod";
-import type { Request, Response, NextFunction, RequestHandler } from "express";
+import type { Request, Response, NextFunction } from "express";
+import { RestHandler } from "@/types/rest.js";
 
-export function validate(schema: ZodSchema<any>): RequestHandler {
+export function validate(schema: ZodSchema<any>): RestHandler {
   return async (
     req: Request,
     res: Response,

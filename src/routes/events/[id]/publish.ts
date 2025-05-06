@@ -2,14 +2,15 @@ import type { Request, RequestHandler, Response } from "express";
 import { requireAuth } from "@/lib/middlewares/require-auth.middleware.js";
 import { requireEventRole } from "@/lib/middlewares/required-event-role.middleware.js";
 import * as eventService from "@/services/event.service.js";
+import { ExtendedRequest, RestHandler } from "@/types/rest.js";
 
 // PATCH /events/:id/publish
-export const PATCH: RequestHandler[] = [
+export const PATCH: RestHandler[] = [
   requireAuth,
   requireEventRole(["OWNER"]),
-  async (req: Request, res: Response) => {
+  async (req: ExtendedRequest, res: Response) => {
     try {
-      const userId = (req as any).userId as string;
+      const userId = req.userId as string;
       const published = await eventService.publishEvent(req.params.id, userId);
       res.status(200).json(published);
     } catch (err: any) {

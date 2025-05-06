@@ -1,17 +1,18 @@
-import type { Request, RequestHandler, Response } from "express";
+import type { Response } from "express";
 import { requireAuth } from "@/lib/middlewares/require-auth.middleware.js";
 import { requireEventRole } from "@/lib/middlewares/required-event-role.middleware.js";
 import { validate } from "@/lib/middlewares/validate.middleware.js";
 import { CreateDiscountSchema } from "@/lib/validators/discount.schema.js";
 import * as dcService from "@/services/discount.service.js";
+import { ExtendedRequest, RestHandler } from "@/types/rest.js";
 
 // GET /events/:id/discount
-export const GET = [
+export const GET: RestHandler[] = [
   requireAuth,
   requireEventRole(["OWNER", "MODERATOR"]),
-  async (req: Request<{ id: string }>, res: Response) => {
+  async (req: ExtendedRequest, res: Response) => {
     try {
-      const userId = (req as any).userId as string;
+      const userId = req.userId as string;
       const codes = await dcService.listDiscountCodes(req.params.id, userId);
       res.status(200).json(codes);
     } catch (err: any) {
@@ -23,13 +24,13 @@ export const GET = [
 ];
 
 // POST /events/:id/discount
-export const POST: RequestHandler[] = [
+export const POST: RestHandler[] = [
   requireAuth,
   requireEventRole(["OWNER"]),
   validate(CreateDiscountSchema),
-  async (req: Request, res: Response) => {
+  async (req: ExtendedRequest, res: Response) => {
     try {
-      const userId = (req as any).userId as string;
+      const userId = req.userId as string;
       const dc = await dcService.createDiscountCode(
         req.params.id,
         userId,

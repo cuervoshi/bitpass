@@ -1,15 +1,15 @@
-import type { Request, RequestHandler, Response } from "express";
+import type { Request, Response } from "express";
 import { requireAuth } from "@/lib/middlewares/require-auth.middleware.js";
 import { requireEventRole } from "@/lib/middlewares/required-event-role.middleware.js";
 import { validate } from "@/lib/middlewares/validate.middleware.js";
 import {
   AddTeamSchema,
-  type AddTeamInput,
 } from "@/lib/validators/team.schema.js";
 import * as teamService from "@/services/team.service.js";
+import { ExtendedRequest, RestHandler } from "@/types/rest.js";
 
 // GET /events/:id/team
-export const GET: RequestHandler[] = [
+export const GET: RestHandler[] = [
   requireAuth,
   requireEventRole(["OWNER", "MODERATOR", "COLLABORATOR"]),
   async (req: Request, res: Response) => {
@@ -25,13 +25,13 @@ export const GET: RequestHandler[] = [
 ];
 
 // POST /events/:id/team
-export const POST: RequestHandler[] = [
+export const POST: RestHandler[] = [
   requireAuth,
   requireEventRole(["OWNER"]),
   validate(AddTeamSchema),
-  async (req: Request, res: Response) => {
+  async (req: ExtendedRequest, res: Response) => {
     try {
-      const currentUserId = (req as any).userId as string;
+      const currentUserId = req.userId as string;
       const member = await teamService.addTeamMember(
         req.params.id,
         req.body,

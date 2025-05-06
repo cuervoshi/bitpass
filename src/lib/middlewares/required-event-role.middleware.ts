@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import { EventRole } from "~/prisma/client/index.js";
 import { getPrisma } from "@/services/prisma.service.js";
+import { ExtendedRequest } from "@/types/rest.js";
 
 /**
  * Middleware factory: ensures the authenticated user has one of the given roles
@@ -9,7 +10,7 @@ import { getPrisma } from "@/services/prisma.service.js";
  * @param allowedRoles Array of EventRole values that are permitted.
  */
 export function requireEventRole(allowedRoles: EventRole[]) {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async (req: ExtendedRequest, res: Response, next: NextFunction) => {
     const userId = (req as any).user?.id as string | undefined;
     if (!userId) {
       res.status(401).json({ error: "Unauthorized" });

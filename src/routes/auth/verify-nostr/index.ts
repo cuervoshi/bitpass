@@ -6,10 +6,11 @@ import {
   type Event as NostrEvent,
 } from "nostr-tools";
 import { getPrisma } from "@/services/prisma.service.js";
+import { RestHandler } from "@/types/rest.js";
 
 const prisma = getPrisma();
 
-export const POST: RequestHandler = async (req: Request, res: Response) => {
+export const POST: RestHandler = async (req: Request, res: Response) => {
   try {
     const event = req.body as NostrEvent;
     if (

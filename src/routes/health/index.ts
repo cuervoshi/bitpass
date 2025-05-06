@@ -1,8 +1,9 @@
-import { Request, RequestHandler, Response } from "express";
+import { Request, Response } from "express";
 import { getVersion } from "@/lib/appInfo.js";
 import { HealthResponse } from "@/types/index.js";
+import { RestHandler } from "@/types/rest.js";
 
-export const GET: RequestHandler = (req: Request, res: Response) => {
+export const GET: RestHandler = async (req: Request, res: Response) => {
   const healthResponse: HealthResponse = {
     status: "OK",
     timestamp: new Date().toISOString(),

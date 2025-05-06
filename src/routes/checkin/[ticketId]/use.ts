@@ -2,14 +2,15 @@ import type { Request, RequestHandler, Response } from "express";
 import { requireAuth } from "@/lib/middlewares/require-auth.middleware.js";
 import { requireEventRole } from "@/lib/middlewares/required-event-role.middleware.js";
 import { checkInTicket } from "@/services/ticket.service.js";
+import { ExtendedRequest, RestHandler } from "@/types/rest.js";
 
 // PATCH /checkin/:ticketId/use
-export const PATCH: RequestHandler[] = [
+export const PATCH: RestHandler[] = [
   requireAuth,
   requireEventRole(["OWNER", "MODERATOR", "COLLABORATOR"]),
-  async (req: Request, res: Response) => {
+  async (req: ExtendedRequest, res: Response) => {
     try {
-      const userId = (req as any).userId as string;
+      const userId = req.userId as string;
       const { ticketId } = req.params;
       const result = await checkInTicket(ticketId, userId);
       res.status(200).json(result);

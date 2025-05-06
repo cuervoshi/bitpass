@@ -1,7 +1,8 @@
+import { ExtendedRequest } from "@/types/rest.js";
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
-export function requireAuth(req: Request, res: Response, next: NextFunction) {
+export async function requireAuth(req: ExtendedRequest, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {

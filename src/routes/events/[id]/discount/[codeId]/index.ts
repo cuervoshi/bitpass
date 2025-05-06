@@ -27,12 +27,12 @@ export const PATCH: RestHandler[] = [
 ];
 
 // DELETE /events/:id/discount/:codeId
-export const del = [
+export const DEL: RestHandler[] = [
   requireAuth,
   requireEventRole(["OWNER"]),
-  async (req: Request<{ id: string; codeId: string }>, res: Response) => {
+  async (req: ExtendedRequest, res: Response) => {
     try {
-      const userId = (req as any).userId as string;
+      const userId = req.userId as string;
       await dcService.deleteDiscountCode(
         req.params.id,
         req.params.codeId,

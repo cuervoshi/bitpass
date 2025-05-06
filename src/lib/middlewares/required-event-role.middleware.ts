@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { EventRole } from "prisma/client/index.js";
+import { EventRole } from "../../../prisma/client/index.js";
 import { getPrisma } from "../../services/prisma.service.js";
 
 /**

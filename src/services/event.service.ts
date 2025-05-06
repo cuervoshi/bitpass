@@ -4,7 +4,7 @@ import {
   PaymentMethod,
   TicketType,
   type Event as EventModel,
-} from "prisma/client/index.js";
+} from "../../prisma/client/index.js";
 import type {
   CreateEventInput,
   UpdateEventInput,

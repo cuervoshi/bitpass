@@ -1,4 +1,4 @@
-import { Currency } from "prisma/client/index.js";
+import { Currency } from "../../../prisma/client/index.js";
 import { z } from "zod";
 
 export const CreateTicketSchema = z.object({

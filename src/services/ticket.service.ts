@@ -1,4 +1,4 @@
-import { TicketType } from "prisma/client/index.js";
+import { TicketType } from "../../prisma/client/index.js";
 import type {
   CreateTicketInput,
   UpdateTicketInput,

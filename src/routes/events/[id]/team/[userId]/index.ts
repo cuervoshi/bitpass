@@ -15,7 +15,7 @@ export const PATCH: RequestHandler[] = [
   validate(UpdateTeamSchema),
   async (req: Request, res: Response) => {
     try {
-      const currentUserId = (req as any).user.id as string;
+      const currentUserId = (req as any).userId as string;
       const updated = await teamService.updateTeamMember(
         req.params.id,
         req.params.userId,
@@ -37,7 +37,7 @@ export const del = [
   requireEventRole(["OWNER"]),
   async (req: Request<{ id: string; userId: string }>, res: Response) => {
     try {
-      const currentUserId = (req as any).user.id as string;
+      const currentUserId = (req as any).userId as string;
       await teamService.deleteTeamMember(
         req.params.id,
         req.params.userId,

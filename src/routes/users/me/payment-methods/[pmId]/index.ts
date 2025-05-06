@@ -6,7 +6,7 @@ import * as userService from "../../../../../services/user.service.js";
 export const DEL: RequestHandler[] = [
   requireAuth,
   async (req: Request, res: Response) => {
-    const userId = (req as any).user.id as string;
+    const userId = (req as any).userId as string;
     await userService.deletePaymentMethod(userId, req.params.pmId);
     res.status(204).send();
   },

@@ -9,7 +9,7 @@ export const PATCH: RequestHandler[] = [
   requireEventRole(["OWNER", "MODERATOR", "COLLABORATOR"]),
   async (req: Request, res: Response) => {
     try {
-      const userId = (req as any).user.id as string;
+      const userId = (req as any).userId as string;
       const { ticketId } = req.params;
       const result = await checkInTicket(ticketId, userId);
       res.status(200).json(result);

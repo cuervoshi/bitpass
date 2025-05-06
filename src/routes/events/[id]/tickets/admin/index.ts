@@ -9,7 +9,7 @@ export const GET: RequestHandler[] = [
   requireEventRole(["OWNER", "MODERATOR"]),
   async (req: Request, res: Response) => {
     try {
-      const userId = (req as any).user.id as string;
+      const userId = (req as any).userId as string;
       const tickets = await ticketService.getAdminTicketTypes(
         req.params.id,
         userId,

@@ -6,7 +6,7 @@ import * as userService from "../../../services/user.service.js";
 export const GET: RequestHandler[] = [
   requireAuth,
   async (req: Request, res: Response) => {
-    const userId = (req as any).user.id as string;
+    const userId = (req as any).userId as string;
     const profile = await userService.getProfile(userId);
     res.status(200).json(profile);
   },

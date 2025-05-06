@@ -12,7 +12,7 @@ export const PATCH: RequestHandler[] = [
   requireAuth,
   validate(CreateLightningSchema),
   async (req: Request, res: Response) => {
-    const userId = (req as any).user.id as string;
+    const userId = (req as any).userId as string;
     const { pmId } = req.params;
     const { lightningAddress } = req.body;
     const updated = await userService.updateLightningMethod(

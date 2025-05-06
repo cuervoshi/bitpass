@@ -1,7 +1,6 @@
 import type { Request, RequestHandler, Response } from "express";
 import { requireAuth } from "../../../../../lib/middlewares/require-auth.middleware.js";
 import { requireEventRole } from "../../../../../lib/middlewares/required-event-role.middleware.js";
-import type { UpdateDiscountInput } from "../../../../../lib/validators/discount.schema.js";
 import * as dcService from "../../../../../services/discount.service.js";
 
 // PATCH /events/:id/discount/:codeId
@@ -10,7 +9,7 @@ export const PATCH: RequestHandler[] = [
   requireEventRole(["OWNER"]),
   async (req: Request, res: Response) => {
     try {
-      const userId = (req as any).user.id as string;
+      const userId = (req as any).userId as string;
       const updated = await dcService.updateDiscountCode(
         req.params.id,
         req.params.codeId,
@@ -32,7 +31,7 @@ export const del = [
   requireEventRole(["OWNER"]),
   async (req: Request<{ id: string; codeId: string }>, res: Response) => {
     try {
-      const userId = (req as any).user.id as string;
+      const userId = (req as any).userId as string;
       await dcService.deleteDiscountCode(
         req.params.id,
         req.params.codeId,

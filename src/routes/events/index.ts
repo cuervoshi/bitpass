@@ -10,7 +10,7 @@ export const POST: RequestHandler[] = [
   validate(CreateEventSchema),
   async (req: Request, res: Response) => {
     try {
-      const userId = (req as any).user.id as string;
+      const userId = (req as any).userId as string;
       const event = await eventService.createDraftEvent(req.body, userId);
       res.status(201).json(event);
     } catch (err) {

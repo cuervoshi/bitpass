@@ -12,7 +12,7 @@ export const POST: RequestHandler[] = [
   requireAuth,
   validate(CreateLightningSchema),
   async (req: Request, res: Response) => {
-    const userId = (req as any).user.id as string;
+    const userId = (req as any).userId as string;
     const { lightningAddress } = req.body;
     const pm = await userService.addLightningMethod(userId, lightningAddress);
     res.status(201).json(pm);

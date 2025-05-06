@@ -9,7 +9,7 @@ export const GET: RequestHandler[] = [
   requireEventRole(["OWNER", "MODERATOR", "COLLABORATOR"]),
   async (req: Request, res: Response) => {
     try {
-      const userId = (req as any).user.id as string;
+      const userId = (req as any).userId as string;
       const evt = await eventService.getDraftEvent(req.params.id, userId);
       res.status(200).json(evt);
     } catch (err: any) {

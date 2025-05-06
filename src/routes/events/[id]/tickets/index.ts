@@ -28,7 +28,7 @@ export const POST: RequestHandler[] = [
   validate(CreateTicketSchema),
   async (req: Request, res: Response) => {
     try {
-      const userId = (req as any).user.id as string;
+      const userId = (req as any).userId as string;
       const eventId = req.params.id;
       const ticket = await ticketService.createTicketType(
         eventId,

@@ -9,7 +9,7 @@ export const PATCH = [
   requireEventRole(["OWNER", "MODERATOR"]),
   async (req: Request<{ id: string }>, res: Response) => {
     try {
-      const userId = (req as any).user.id as string;
+      const userId = (req as any).userId as string;
       const updated = await eventService.updateDraftEvent(
         req.params.id,
         userId,
@@ -33,7 +33,7 @@ export const DEL: RequestHandler[] = [
   requireEventRole(["OWNER"]),
   async (req: Request, res: Response) => {
     try {
-      const userId = (req as any).user.id as string;
+      const userId = (req as any).userId as string;
       await eventService.deleteEvent(req.params.id, userId);
       res.status(204).send();
     } catch (err: any) {

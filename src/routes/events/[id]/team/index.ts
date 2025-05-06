@@ -31,7 +31,7 @@ export const POST: RequestHandler[] = [
   validate(AddTeamSchema),
   async (req: Request, res: Response) => {
     try {
-      const currentUserId = (req as any).user.id as string;
+      const currentUserId = (req as any).userId as string;
       const member = await teamService.addTeamMember(
         req.params.id,
         req.body,

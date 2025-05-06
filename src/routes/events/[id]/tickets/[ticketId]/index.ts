@@ -15,7 +15,7 @@ export const PATCH: RequestHandler[] = [
   validate(UpdateTicketSchema),
   async (req: Request, res: Response) => {
     try {
-      const userId = (req as any).user.id as string;
+      const userId = (req as any).userId as string;
       const { id: eventId, ticketId } = req.params;
       const updated = await ticketService.updateTicketType(
         eventId,
@@ -44,7 +44,7 @@ export const DEL: RequestHandler[] = [
   requireEventRole(["OWNER", "MODERATOR"]),
   async (req: Request, res: Response) => {
     try {
-      const userId = (req as any).user.id as string;
+      const userId = (req as any).userId as string;
       const { id: eventId, ticketId } = req.params;
       await ticketService.deleteTicketType(eventId, ticketId, userId);
       res.status(204).send();

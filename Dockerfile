@@ -12,6 +12,6 @@ COPY . .
 
 RUN pnpm run build
 
-EXPOSE 3000
+COPY docker-entrypoint.sh .
 
-CMD ["pnpm", "start"]
+ENTRYPOINT ["./docker-entrypoint.sh"]

@@ -18,7 +18,7 @@ const createApp = async (): Promise<Application> => {
 
   app.use("/", await router({ directory: path.join(__dirname, "routes") }));
 
-  // // 404 handler for undefined routes
+  // 404 handler for undefined routes
   app.use((req, res) => {
     res.status(404).json({
       status: "error",
@@ -27,7 +27,7 @@ const createApp = async (): Promise<Application> => {
     });
   });
 
-  // // Error handling middleware (should be last)
+  // Error handling middleware (should be last)
   app.use(errorHandler);
 
   return app;

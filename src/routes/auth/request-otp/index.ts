@@ -3,8 +3,11 @@ import { getPrisma } from "@/services/prisma.service.js";
 import { z } from "zod";
 import crypto from "crypto";
 import { RestHandler } from "@/types/rest.js";
+import { logger } from "@/lib/utils.js";
 
 const prisma = getPrisma();
+
+const log = logger.extend("auth:request-otp");
 
 const RequestOtpSchema = z.object({
   email: z.string().trim().email(),
@@ -44,6 +47,7 @@ export const POST: RestHandler = async (req: Request, res: Response) => {
     });
 
     // TODO: real email sending logic here
+    log('Code: ', code)
     // await mailer.sendOtp(email, code);
 
     res.status(200).json({ success: true });

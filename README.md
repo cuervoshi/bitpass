@@ -1,3 +1,4 @@
+
 # Running the Project
 
 ## Node Version
@@ -23,6 +24,26 @@ DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE"
 
 ```bash
 pnpm install
+```
+
+## Database Setup
+
+To initialize the database and apply the schema:
+
+```bash
+pnpm prisma migrate deploy
+```
+
+If running locally and using a development environment:
+
+```bash
+pnpm prisma migrate dev
+```
+
+To generate the Prisma client (already included in build):
+
+```bash
+pnpm prisma generate
 ```
 
 ## Development

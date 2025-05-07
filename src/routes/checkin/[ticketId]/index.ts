@@ -11,7 +11,6 @@ import { ExtendedRequest, RestHandler } from "@/types/rest.js";
  */
 export const GET: RestHandler[] = [
   requireAuth,
-  requireEventRole(["OWNER", "MODERATOR", "COLLABORATOR"]),
   async (req: ExtendedRequest, res: Response) => {
     const paramsSchema = z.object({ ticketId: z.string().uuid() });
     const parsed = paramsSchema.safeParse(req.params);

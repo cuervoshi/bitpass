@@ -11,7 +11,7 @@ import { ExtendedRequest } from "@/types/rest.js";
  */
 export function requireEventRole(allowedRoles: EventRole[]) {
   return async (req: ExtendedRequest, res: Response, next: NextFunction) => {
-    const userId = (req as any).user?.id as string | undefined;
+    const userId = req.userId as string | undefined;
     if (!userId) {
       res.status(401).json({ error: "Unauthorized" });
       return;

@@ -1,5 +1,9 @@
 import createApp from "./app.js";
 import { config } from "./lib/env.js";
+import { logger } from "@/lib/utils.js";
+
+const log = logger.extend("app:index");
+const error = logger.extend("app:index:error");
 
 const startServer = async (): Promise<void> => {
   try {
@@ -7,14 +11,13 @@ const startServer = async (): Promise<void> => {
     const PORT = config.port;
 
     app.listen(PORT, () => {
-      console.log(`🚀 Server started successfully in ${config.nodeEnv} mode`);
-      console.log(`⏱️ Server time: ${new Date().toISOString()}`);
+      log(`Server started successfully in ${config.nodeEnv} mode`);
+      log(`Server time: ${new Date().toISOString()}`);
     });
-  } catch (error) {
-    console.error("Failed to start server:", error);
+  } catch (err) {
+    error("Failed to start server: %O", err);
     process.exit(1);
   }
 };
 
-// Start the server
 startServer();

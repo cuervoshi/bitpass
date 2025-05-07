@@ -1,5 +1,5 @@
 import express, { Application } from "express";
-import { logger } from "./lib/middlewares/logger.middleware.js";
+import { requestLogger } from "./lib/middlewares/logger.middleware.js";
 import { errorHandler } from "./lib/middlewares/error-handler.middleware.js";
 
 import { router } from "express-file-routing";
@@ -14,7 +14,7 @@ const createApp = async (): Promise<Application> => {
 
   // Middleware
   app.use(express.json());
-  app.use(logger);
+  app.use(requestLogger);
 
   app.use("/", await router({ directory: path.join(__dirname, "routes") }));
 

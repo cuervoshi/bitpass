@@ -252,7 +252,6 @@ export async function getTicketInfo(ticketId: string, userId: string) {
 
   if (!ticket) throw { status: 404, message: "Ticket not found" };
 
-  // permiso: owner o team member
   if (ticket.event.creatorId !== userId && ticket.event.team.length === 0) {
     throw { status: 403, message: "Forbidden" };
   }

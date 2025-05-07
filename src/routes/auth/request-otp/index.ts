@@ -19,10 +19,7 @@ export const POST: RestHandler = async (req: Request, res: Response) => {
   const email = parse.data.email.toLowerCase();
 
   try {
-    const code = crypto
-      .randomInt(0, 1_000_000)
-      .toString()
-      .padStart(6, "0");
+    const code = crypto.randomInt(0, 1_000_000).toString().padStart(6, "0");
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
     await prisma.$transaction(async (tx) => {

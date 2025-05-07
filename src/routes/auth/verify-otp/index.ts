@@ -12,7 +12,8 @@ const prisma = getPrisma();
 export const POST: RestHandler = async (req: Request, res: Response) => {
   const rawEmail = req.body.email;
   const code = req.body.code;
-  const email = typeof rawEmail === "string" ? rawEmail.trim().toLowerCase() : "";
+  const email =
+    typeof rawEmail === "string" ? rawEmail.trim().toLowerCase() : "";
 
   if (!email || typeof code !== "string") {
     res.status(400).json({ error: "Invalid parameters" });

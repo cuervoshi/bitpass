@@ -17,6 +17,16 @@ export async function createDraftEvent(data: CreateEventInput, userId: string) {
   const startsAt = new Date(`${data.startDate}T${data.startTime}:00`);
   const endsAt = new Date(`${data.endDate}T${data.endTime}:00`);
 
+  if (isNaN(startsAt.valueOf()) || isNaN(endsAt.valueOf())) {
+    throw { status: 400, message: "Invalid date or time format" };
+  }
+  if (startsAt >= endsAt) {
+    throw {
+      status: 400,
+      message: "End date/time must be after start date/time",
+    };
+  }
+
   return prisma.event.create({
     data: {
       title: data.title,

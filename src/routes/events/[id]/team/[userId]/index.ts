@@ -39,13 +39,13 @@ export const DEL: RestHandler[] = [
   async (req: ExtendedRequest, res: Response) => {
     try {
       const currentUserId = req.userId as string;
-      
+
       await teamService.deleteTeamMember(
         req.params.id,
         req.params.userId,
         currentUserId,
       );
-      
+
       res.status(204).send();
     } catch (err: any) {
       res

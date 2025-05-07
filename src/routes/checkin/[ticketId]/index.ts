@@ -20,7 +20,10 @@ export const GET: RestHandler[] = [
     }
 
     try {
-      const ticket = await getTicketInfo(parsed.data.ticketId, req.userId as string);
+      const ticket = await getTicketInfo(
+        parsed.data.ticketId,
+        req.userId as string,
+      );
       res.status(200).json(ticket);
     } catch (err: any) {
       if (typeof err.status === "number" && typeof err.message === "string") {

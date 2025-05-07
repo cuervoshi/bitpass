@@ -2,9 +2,7 @@ import type { Request, RequestHandler, Response } from "express";
 import { requireAuth } from "@/lib/middlewares/require-auth.middleware.js";
 import { requireEventRole } from "@/lib/middlewares/required-event-role.middleware.js";
 import { validate } from "@/lib/middlewares/validate.middleware.js";
-import {
-  CreateTicketSchema,
-} from "@/lib/validators/ticket.schema.js";
+import { CreateTicketSchema } from "@/lib/validators/ticket.schema.js";
 import * as ticketService from "@/services/ticket.service.js";
 import { ExtendedRequest, RestHandler } from "@/types/rest.js";
 

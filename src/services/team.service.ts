@@ -7,6 +7,9 @@ const prisma = getPrisma();
  * List all team members of an event.
  */
 export async function listTeam(eventId: string) {
+  const evt = await prisma.event.findUnique({ where: { id: eventId } });
+  if (!evt) throw { status: 404, message: "Event not found" };
+
   return prisma.eventMember.findMany({
     where: { eventId },
     select: { userId: true, role: true, createdAt: true },
@@ -21,13 +24,11 @@ export async function addTeamMember(
   { userId, role }: AddTeamInput,
   currentUserId: string,
 ) {
-  // ensure event exists and currentUserId is OWNER
   const evt = await prisma.event.findUnique({ where: { id: eventId } });
   if (!evt) throw { status: 404, message: "Event not found" };
   if (evt.creatorId !== currentUserId)
     throw { status: 403, message: "Forbidden" };
 
-  // prevent duplicate
   const exists = await prisma.eventMember.findUnique({
     where: { eventId_userId: { eventId, userId } },
   });
@@ -35,6 +36,7 @@ export async function addTeamMember(
 
   return prisma.eventMember.create({
     data: { eventId, userId, role },
+    select: { userId: true, role: true, createdAt: true },
   });
 }
 

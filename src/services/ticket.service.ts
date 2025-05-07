@@ -9,9 +9,6 @@ const prisma = getPrisma();
 
 /**
  * Create a new TicketType under the given event.
- * - Only DRAFT events
- * - Only owner or team members
- * - Enforces unique (eventId, name)
  */
 export async function createTicketType(
   eventId: string,
@@ -22,17 +19,11 @@ export async function createTicketType(
     where: { id: eventId },
     include: { team: { where: { userId } } },
   });
-  if (!evt) {
-    throw { status: 404, message: "Event not found" };
-  }
-
-  if (evt.status !== "DRAFT") {
+  if (!evt) throw { status: 404, message: "Event not found" };
+  if (evt.status !== "DRAFT")
     throw { status: 400, message: "Cannot add tickets to a non-draft event" };
-  }
-
-  if (evt.creatorId !== userId && evt.team.length === 0) {
+  if (evt.creatorId !== userId && evt.team.length === 0)
     throw { status: 403, message: "Forbidden" };
-  }
 
   try {
     return await prisma.ticketType.create({
@@ -43,6 +34,15 @@ export async function createTicketType(
         currency: data.currency,
         quantity: data.quantity,
       },
+      select: {
+        id: true,
+        name: true,
+        price: true,
+        currency: true,
+        quantity: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
   } catch (err: any) {
     if (err.code === "P2002") {
@@ -51,7 +51,6 @@ export async function createTicketType(
         message: "A ticket with that name already exists for this event",
       };
     }
-
     throw err;
   }
 }
@@ -157,11 +156,10 @@ export async function deleteTicketType(
 }
 
 /**
- * Public listing: ticket types of a PUBLISHED event
- * with sold and available counts.
+ * Public listing: ticket types of a PUBLISHED event.
  */
 export async function getPublicTicketTypes(eventId: string) {
-  const evt = await prisma.event.findUnique({
+  const evt = await prisma.event.findFirst({
     where: { id: eventId, status: "PUBLISHED" },
     select: { id: true },
   });
@@ -171,8 +169,15 @@ export async function getPublicTicketTypes(eventId: string) {
 
   const types = await prisma.ticketType.findMany({
     where: { eventId },
-    include: {
+    select: {
+      id: true,
+      name: true,
+      price: true,
+      currency: true,
+      quantity: true,
       _count: { select: { tickets: true } },
+      createdAt: true,
+      updatedAt: true,
     },
   });
 
@@ -183,6 +188,8 @@ export async function getPublicTicketTypes(eventId: string) {
     currency: t.currency,
     sold: t._count.tickets,
     available: t.quantity - t._count.tickets,
+    createdAt: t.createdAt,
+    updatedAt: t.updatedAt,
   }));
 }
 

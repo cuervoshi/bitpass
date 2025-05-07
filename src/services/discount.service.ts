@@ -18,7 +18,18 @@ export async function listDiscountCodes(eventId: string, userId: string) {
   if (evt.creatorId !== userId && evt.team.length === 0) {
     throw { status: 403, message: "Forbidden" };
   }
-  return prisma.discountCode.findMany({ where: { eventId } });
+  return prisma.discountCode.findMany({
+    where: { eventId },
+    select: {
+      id: true,
+      code: true,
+      percentage: true,
+      expiresAt: true,
+      maxUses: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
 }
 
 /**
@@ -43,6 +54,15 @@ export async function createDiscountCode(
       expiresAt: input.expiresAt ? new Date(input.expiresAt) : undefined,
       maxUses: input.maxUses,
     },
+    select: {
+      id: true,
+      code: true,
+      percentage: true,
+      expiresAt: true,
+      maxUses: true,
+      createdAt: true,
+      updatedAt: true,
+    },
   });
 }
 
@@ -59,7 +79,9 @@ export async function updateDiscountCode(
     where: { id: codeId },
     include: { event: true },
   });
-  if (!dc) throw { status: 404, message: "Discount code not found" };
+  if (!dc) {
+    throw { status: 404, message: "Discount code not found" };
+  }
   if (dc.eventId !== eventId) {
     throw { status: 400, message: "Code does not belong to this event" };
   }
@@ -69,11 +91,36 @@ export async function updateDiscountCode(
   if (dc.event.status !== "DRAFT") {
     throw { status: 400, message: "Can only edit codes on draft events" };
   }
+
+  const data: Record<string, any> = {};
+  if (input.code !== undefined) {
+    data.code = input.code;
+  }
+  if (input.percentage !== undefined) {
+    data.percentage = input.percentage;
+  }
+  if (input.maxUses !== undefined) {
+    data.maxUses = input.maxUses;
+  }
+  if (input.expiresAt !== undefined) {
+    data.expiresAt = new Date(input.expiresAt);
+  }
+
+  if (Object.keys(data).length === 0) {
+    throw { status: 400, message: "At least one field must be provided" };
+  }
+
   return prisma.discountCode.update({
     where: { id: codeId },
-    data: {
-      ...input,
-      expiresAt: input.expiresAt ? new Date(input.expiresAt) : dc.expiresAt,
+    data,
+    select: {
+      id: true,
+      code: true,
+      percentage: true,
+      expiresAt: true,
+      maxUses: true,
+      createdAt: true,
+      updatedAt: true,
     },
   });
 }
@@ -90,7 +137,9 @@ export async function deleteDiscountCode(
     where: { id: codeId },
     include: { event: true },
   });
-  if (!dc) throw { status: 404, message: "Discount code not found" };
+  if (!dc) {
+    throw { status: 404, message: "Discount code not found" };
+  }
   if (dc.eventId !== eventId) {
     throw { status: 400, message: "Code does not belong to this event" };
   }
@@ -100,6 +149,7 @@ export async function deleteDiscountCode(
   if (dc.event.status !== "DRAFT") {
     throw { status: 400, message: "Can only delete codes on draft events" };
   }
+
   await prisma.discountCode.delete({ where: { id: codeId } });
 }
 
@@ -108,26 +158,20 @@ export async function deleteDiscountCode(
  * @throws { status:404|400|403 } if the code is not found or invalid.
  */
 export async function validateDiscountCode(eventId: string, code: string) {
-  // 1) Find the code and include its event + existing uses
   const dc = await prisma.discountCode.findFirst({
     where: { eventId, code },
-    include: {
-      event: true,
-      orders: true,
-    },
+    include: { event: true, orders: true },
   });
+
   if (!dc) {
     throw { status: 404, message: "Discount code not found" };
   }
-
   if (dc.event.status !== "PUBLISHED") {
     throw { status: 403, message: "Event not published" };
   }
-
   if (dc.expiresAt && dc.expiresAt < new Date()) {
     throw { status: 400, message: "Discount code expired" };
   }
-
   if (dc.maxUses != null && dc.orders.length >= dc.maxUses) {
     throw { status: 400, message: "Discount code usage limit reached" };
   }

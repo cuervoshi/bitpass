@@ -14,8 +14,7 @@
     "noImplicitAny": false,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "~/prisma/*": ["prisma/*"]
+      "@/*": ["src/*"]
     }
   },
   "include": ["src/**/*"],

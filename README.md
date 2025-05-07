@@ -1,5 +1,14 @@
 # Running the Project
 
+## Node Version
+
+Ensure you have Node Version Manager (nvm) installed and are using the correct Node.js version:
+
+```bash
+nvm install
+nvm use
+```
+
 ## Environment Variables
 
 Create a `.env` file in the project root with the following variables:

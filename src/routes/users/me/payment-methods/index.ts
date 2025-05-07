@@ -1,4 +1,4 @@
-import type { Request, RequestHandler, Response } from "express";
+import type { Response } from "express";
 import { requireAuth } from "@/lib/middlewares/require-auth.middleware.js";
 import * as userService from "@/services/user.service.js";
 import { ExtendedRequest, RestHandler } from "@/types/rest.js";

@@ -50,7 +50,7 @@ export const POST: RestHandler = async (req: Request, res: Response) => {
     log('Code: ', code)
     // await mailer.sendOtp(email, code);
 
-    res.status(200).json({ success: true });
+    res.status(200).json({ success: true, code }); // TODO: code in response is only for debugging. Remover when implementing mail
     return;
   } catch (err) {
     console.error("[POST /auth/request-otp] Error:", err);

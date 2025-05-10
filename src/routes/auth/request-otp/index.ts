@@ -47,7 +47,7 @@ export const POST: RestHandler = async (req: Request, res: Response) => {
     });
 
     // TODO: real email sending logic here
-    log('Code: ', code)
+    log("Code: ", code);
     // await mailer.sendOtp(email, code);
 
     res.status(200).json({ success: true, code }); // TODO: code in response is only for debugging. Remover when implementing mail

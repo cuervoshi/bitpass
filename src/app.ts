@@ -5,7 +5,7 @@ import { errorHandler } from "./lib/middlewares/error-handler.middleware.js";
 import { router } from "express-file-routing";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
-import cors from 'cors';
+import cors from "cors";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

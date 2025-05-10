@@ -9,6 +9,39 @@ import { logger } from "@/lib/utils.js";
 const error = logger.extend("events:handler:error");
 
 /**
+ * GET /events/:id
+ * Fetches a draft event (with ticketTypes, discountCodes, team, paymentMethods)
+ * for owner, moderator or collaborator.
+ */
+export const GET: RestHandler[] = [
+  requireAuth,
+  requireEventRole(["OWNER", "MODERATOR", "COLLABORATOR"]),
+  async (req: ExtendedRequest, res: Response) => {
+    const paramsResult = z
+      .object({ id: z.string().uuid() })
+      .safeParse(req.params);
+
+    if (!paramsResult.success) {
+      res.status(400).json({ error: "Invalid event ID" });
+      return;
+    }
+    const eventId = paramsResult.data.id;
+
+    try {
+      const evt = await eventService.getDraftEvent(eventId, req.userId);
+      res.status(200).json(evt);
+    } catch (err: any) {
+      if (typeof err.status === "number" && typeof err.message === "string") {
+        res.status(err.status).json({ error: err.message });
+      } else {
+        error("Unexpected error on GET /events/:id/edit: %O", err);
+        res.status(500).json({ error: "Internal server error" });
+      }
+    }
+  },
+];
+
+/**
  * PATCH /events/:id
  * Updates one or more fields of an existing draft event.
  */
